@@ -2,6 +2,8 @@ package com.example.wonderwoman.jwt;
 
 import com.example.wonderwoman.auth.service.RedisService;
 import com.example.wonderwoman.common.dto.TokenDto;
+import com.example.wonderwoman.login.PrincipalDetails;
+import com.example.wonderwoman.member.entity.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +24,18 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.EMAIL;
+
 @Component
 @Slf4j
 public class JwtTokenProvider implements InitializingBean {
     private static final String AUTHORITIES_KEY = "auth";
+
+    private static final String ID = "id";
     private static Key signingKey;
-    private final Long validityMsec;
-    private final Long refreshMsec;
-    private final RedisService redisService;
+    private static Long validityMsec;
+    private static Long refreshMsec;
+    public static  RedisService redisService;
     private final String secretKey;
 
     public JwtTokenProvider(RedisService redisService,
@@ -43,8 +49,9 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     //토큰 생성
-    public TokenDto createToken(Authentication authentication) {
-        //권한 가져오기
+    // Token 생성
+    public static TokenDto createToken(String email, Authentication authentication) {
+        // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -53,30 +60,34 @@ public class JwtTokenProvider implements InitializingBean {
         Date expiration = new Date(now.getTime() + validityMsec);
         Date refresh = new Date(now.getTime() + refreshMsec);
 
-        //access token 생성
+        // Access Token 생성
         String accessToken = Jwts.builder()
-                .setSubject("access-token")   //user idx가 지정될 것
+                .setSubject("access-token")   // 사용자 정보가 지정될 것
                 .claim(AUTHORITIES_KEY, authorities)
-                .setIssuedAt(now)   //발급시간
-                .setExpiration(expiration)  //만료시간
+                .claim(String.valueOf(EMAIL), email)          // 이메일 정보를 클레임에 추가
+                .setIssuedAt(now)             // 발급 시간
+                .setExpiration(expiration)    // 만료 시간
                 .signWith(SignatureAlgorithm.HS512, signingKey)
                 .compact();
 
+        // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setSubject("refresh-token")
+                .setIssuedAt(now)
                 .setExpiration(refresh)
                 .signWith(SignatureAlgorithm.HS512, signingKey)
                 .compact();
 
-        //token dtd에 access, refresh token 정보 담기
+        // TokenDto에 Access Token과 Refresh Token 정보 담기
         return TokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
+
     //토큰으로 인증 정보 조회
-    public Authentication getAuthentication(String token) {
+    public static Authentication getAuthentication(String token) {
         //토큰 복호화
         Claims claims = parseClaims(token);
 
@@ -90,12 +101,14 @@ public class JwtTokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
+        String id = claims.get(ID).toString();
+
         //UserDetails 객체에 토큰 정보와 생성한 인가 넣고 return
-        UserDetails userDetails = new User(claims.getSubject(), "", authorities);
+        UserDetails userDetails = new PrincipalDetails(Member.builder().build());
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
-    public boolean validateToken(String token) {
+    public static boolean validateToken(String token) {
         //확인 위해 아래와 같이 작성
         try {
             if (redisService.getValues(token) != null // NullPointException 방지
@@ -118,7 +131,7 @@ public class JwtTokenProvider implements InitializingBean {
         //return !claims.getBody().getExpiration().before(new Date());
     }
 
-    public boolean validateRefreshToken(String token) {
+    public static boolean validateRefreshToken(String token) {
         //확인 위해 아래와 같이 작성
         try {
             if (redisService.getValues(token).equals("delete")) { // 회원 탈퇴했을 경우
@@ -142,10 +155,10 @@ public class JwtTokenProvider implements InitializingBean {
         //return !claims.getBody().getExpiration().before(new Date());
     }
 
-    private Claims parseClaims(String accessToken) {
+    private static Claims parseClaims(String accessToken) {
         try {
             //올바른 토큰이면 true
-            return Jwts.parserBuilder().setSigningKey(secretKey).build()
+            return Jwts.parserBuilder().setSigningKey(signingKey).build()
                     .parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             //만료 토큰이어도 토큰 정보 꺼내서 return
@@ -170,4 +183,19 @@ public class JwtTokenProvider implements InitializingBean {
             return false;
         }
     }
+
+    public static Key getSigningKey() {
+        return signingKey;
+    }
+
+    public static void invalidateToken(String token) {
+        // Redis 또는 다른 저장소를 사용하는 경우 해당 토큰을 무효화하는 로직을 구현합니다.
+        // 예를 들어 Redis에 저장된 토큰 정보를 삭제하는 코드 등을 작성할 수 있습니다.
+        // redisService.deleteValues(token);
+
+        // 여기서는 단순히 로그만 남기는 예시를 보여줍니다.
+        log.info("Token invalidated: {}", token);
+    }
+
+
 }

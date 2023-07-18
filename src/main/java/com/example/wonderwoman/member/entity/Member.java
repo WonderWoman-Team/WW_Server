@@ -7,6 +7,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Getter
@@ -36,15 +42,27 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private School school;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    private Authentication authorities;
+
     @Builder
     public Member(String email, String nickname, String password, School school) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
         this.school = school;
+        this.role = Role.ROLE_USER;
     }
 
     public void updatePassword(String password) {
         this.password = password;
     }
+
+    public Authentication getAuthorities() {
+
+        return authorities;
+
+    }
+
 }
