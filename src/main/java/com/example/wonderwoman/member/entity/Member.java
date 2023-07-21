@@ -36,12 +36,16 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private School school;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Builder
     public Member(String email, String nickname, String password, School school) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
         this.school = school;
+        this.role = Role.ROLE_USER;
     }
 
     public void updatePassword(String password) {
