@@ -3,10 +3,8 @@ package com.example.wonderwoman.delivery.request;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.entity.DeliveryPostId;
 import com.example.wonderwoman.member.entity.Member;
-import com.example.wonderwoman.member.entity.School;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,25 +22,22 @@ public class DeliveryRequestDto {
     private String schoolBuildingId;
     private String postStatus;
 
-
-    @NotBlank(message = "닉네임은 필수 입력값입니다.")
+    @NotBlank(message = "제목은 입력값입니다.")
     private String post_title;
 
-    @NotBlank(message = "닉네임은 필수 입력값입니다.")
+    @NotBlank(message = "유형은 필수 입력값입니다.")
     private String post_req_type;
 
-    @NotBlank(message = "이메일은 필수 입력값입니다.")
+    @NotBlank(message = "개수는 필수 입력값입니다.")
     private String post_number;
 
-    @NotBlank(message = "이메일은 필수 입력값입니다.")
+    @NotBlank(message = "크기는 필수 입력값입니다.")
     private String post_size;
 
-    @NotBlank(message = "이메일은 필수 입력값입니다.")
+    @NotBlank(message = "종류는 필수 입력값입니다.")
     private String post_type;
 
-    @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String post_comment;
-
     private String school;
 
     public DeliveryPost toDeliveryPost() {
