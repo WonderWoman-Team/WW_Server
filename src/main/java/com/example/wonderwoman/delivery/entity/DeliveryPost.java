@@ -10,13 +10,15 @@ import lombok.Builder;
 @Table(name = "delivery_post")
 public class DeliveryPost {
 
+    //유저 id, 게시물 id 포함하고 있는 deliveryPostId
     @EmbeddedId
     private DeliveryPostId deliveryPostId;
 
+    //빌딩 entity 쓰는 것보다 이렇게 학교 id, 건물 id 따로 하는게 나은지?
     @Column(name = "school", length = 10, nullable = false)
     private String schoolId;
 
-    @Column(name = "school_building_id", length = 100, nullable = false)
+    @Column(name = "schoolBuildingId", length = 100, nullable = false)
     private String schoolBuildingId;
 
     @Column(name = "post_status", length = 10, nullable = false)
