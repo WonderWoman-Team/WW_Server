@@ -16,7 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 @Builder
 public class DeliveryRequestDto {
-    private DeliveryPostId deliveryPostId;
+    //DeliveryPost 엔티티에서 자동 생성되므로 삭제
+    //private DeliveryPostId deliveryPostId;
     private Member member;
     private String schoolId;
     private String schoolBuildingId;
@@ -42,9 +43,8 @@ public class DeliveryRequestDto {
 
     public DeliveryPost toDeliveryPost() {
         return DeliveryPost.builder()
-                .deliveryPostId(deliveryPostId)
                 .schoolId(schoolId)
-                .school_building_id(schoolBuildingId)
+                .schoolBuildingId(schoolBuildingId)
                 .post_status(postStatus)
                 .post_title(post_title)
                 .post_req_type(post_req_type)

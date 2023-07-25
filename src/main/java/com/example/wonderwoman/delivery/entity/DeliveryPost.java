@@ -12,6 +12,7 @@ public class DeliveryPost {
 
     //유저 id, 게시물 id 포함하고 있는 deliveryPostId
     @EmbeddedId
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private DeliveryPostId deliveryPostId;
 
     //빌딩 entity 쓰는 것보다 이렇게 학교 id, 건물 id 따로 하는게 나은지?
@@ -47,9 +48,9 @@ public class DeliveryPost {
     private Member member;
 
     @Builder
-    public DeliveryPost(DeliveryPostId deliveryPostId, String schoolId, String school_building_id, String post_status,
-                        String post_title, String post_req_type, String post_number, String post_size,
-                        String post_type, String post_comment, Member member) {
+    public DeliveryPost(DeliveryPostId deliveryPostId, String schoolId, String schoolBuildingId, String postStatus,
+                        String postTitle, String postReqType, int postNumber, String postSize,
+                        String postType, String postComment, Member member) {
         this.deliveryPostId = deliveryPostId;
         this.schoolId = schoolId;
         this.schoolBuildingId = schoolBuildingId;
