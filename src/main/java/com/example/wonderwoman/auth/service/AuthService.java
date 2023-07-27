@@ -1,6 +1,8 @@
 package com.example.wonderwoman.auth.service;
 
 import com.example.wonderwoman.auth.request.MemberRequestDto;
+import com.example.wonderwoman.exception.ErrorCode;
+import com.example.wonderwoman.exception.WonderException;
 import com.example.wonderwoman.member.entity.Member;
 import com.example.wonderwoman.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +20,14 @@ public class AuthService {
     //회원가입
     public void joinMember(MemberRequestDto requestDto) {
         if (findMemberByEmail(requestDto.getEmail()))
-            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+            throw new WonderException(ErrorCode.ALREADY_MEMBER);
 
         Member member = requestDto.toMember(passwordEncoder);
         memberRepository.save(member);
     }
 
     public void changeTempPw(String email, String newPassword) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("가입되지 않은 이메일입니다"));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new WonderException(ErrorCode.MEMBER_NOT_FOUND));
         member.updatePassword(passwordEncoder.encode((newPassword)));
     }
 

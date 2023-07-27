@@ -1,68 +1,87 @@
 package com.example.wonderwoman.delivery.entity;
 
+import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.common.entity.BaseTimeEntity;
 import com.example.wonderwoman.member.entity.Member;
-import com.example.wonderwoman.member.entity.Role;
 import com.example.wonderwoman.member.entity.School;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "delivery_post")
-public class DeliveryPost {
+public class DeliveryPost extends BaseTimeEntity {
 
-    //유저 id, 게시물 id 포함하고 있는 deliveryPostId
-    @EmbeddedId
+    //게시물 id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private DeliveryPostId deliveryPostId;
+    private Long id;
 
-    //빌딩 entity 쓰는 것보다 이렇게 학교 id, 건물 id 따로 하는게 나은지?
-    @Column(name = "school", length = 10, nullable = false)
-    private String schoolId;
+    @Enumerated(EnumType.STRING)
+    private School school;
 
-    @Column(name = "schoolBuildingId", length = 100, nullable = false)
-    private String schoolBuildingId;
+    @Enumerated(EnumType.STRING)
+    private Building building;
 
-    @Column(name = "post_status", length = 10, nullable = false)
-    private String postStatus;
+    @Enumerated(EnumType.STRING)
+    private PostStatus postStatus;
 
     @Column(name = "post_title", length = 200)
     private String postTitle;
 
-    @Column(name = "post_req_type", length = 10, nullable = false)
-    private String postReqType;
+    @Enumerated(EnumType.STRING)
+    private ReqType postReqType;
 
     @Column(name = "post_number", nullable = false)
     private int postNumber;
 
-    @Column(name = "post_size", length = 100, nullable = false)
-    private String postSize;
+    @Enumerated(EnumType.STRING)
+    private SanitarySize sanitarySize;
 
-    @Column(name = "post_type", length = 100, nullable = false)
-    private String postType;
+    @Enumerated(EnumType.STRING)
+    private SanitaryType sanitaryType;
 
     @Column(name = "post_comment", length = 200)
     private String postComment;
 
-    @ManyToOne
-    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "writer_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Member member;
 
     @Builder
-    public DeliveryPost(DeliveryPostId deliveryPostId, String schoolId, String schoolBuildingId, String postStatus,
-                        String postTitle, String postReqType, int postNumber, String postSize,
-                        String postType, String postComment, Member member) {
-        this.deliveryPostId = deliveryPostId;
-        this.schoolId = schoolId;
-        this.schoolBuildingId = schoolBuildingId;
+    public DeliveryPost(School school, Building building, PostStatus postStatus,
+                        String postTitle, ReqType postReqType, int postNumber, SanitarySize sanitarySize,
+                        SanitaryType sanitaryType, String postComment, Member member) {
+        this.school = school;
+        this.building = building;
         this.postStatus = postStatus;
         this.postTitle = postTitle;
         this.postReqType = postReqType;
         this.postNumber = postNumber;
-        this.postSize = postSize;
-        this.postType = postType;
+        this.sanitarySize = sanitarySize;
+        this.sanitaryType = sanitaryType;
         this.postComment = postComment;
-        this.member= member;
+        this.member = member;
 
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        else if (!(obj instanceof DeliveryPost)) return false;
+        DeliveryPost deliveryPost = (DeliveryPost) obj;
+        return Objects.equals(id, deliveryPost.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
 }

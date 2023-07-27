@@ -1,19 +1,22 @@
 package com.example.wonderwoman.delivery.service;
 
-import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.repository.DeliveryPostRepository;
-import com.example.wonderwoman.member.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
+import com.example.wonderwoman.member.entity.Member;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
+@Transactional
+@RequiredArgsConstructor
 public class DeliveryService {
-
-    @Autowired
-    private DeliveryPostRepository deliveryPostRepository;
+    private final DeliveryPostRepository deliveryPostRepository;
 
     //회원가입
-    public void postDelivery(DeliveryRequestDto requestDto) {
-        DeliveryPost deliveryPost = requestDto.toDeliveryPost();
+    public void postDelivery(Member member, DeliveryRequestDto requestDto) {
+        DeliveryPost deliveryPost = requestDto.toDeliveryPost(member);
         deliveryPostRepository.save(deliveryPost);
     }
 
