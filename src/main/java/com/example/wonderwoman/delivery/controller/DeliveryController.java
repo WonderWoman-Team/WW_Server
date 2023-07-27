@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/app/board")
+@RequestMapping("/app/delivery")
 public class DeliveryController {
 
     private final DeliveryService deliveryService;
