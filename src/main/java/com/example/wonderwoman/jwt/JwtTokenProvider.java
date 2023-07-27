@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JwtTokenProvider implements InitializingBean {
     private static final String AUTHORITIES_KEY = "auth";
+
+    private static final String ID = "id";
     private static Key signingKey;
     private final Long validityMsec;
     private final Long refreshMsec;
@@ -43,7 +45,7 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     //토큰 생성
-    public TokenDto createToken(Authentication authentication) {
+    public TokenDto createToken(String id, Authentication authentication) {
         //권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -57,6 +59,7 @@ public class JwtTokenProvider implements InitializingBean {
         String accessToken = Jwts.builder()
                 .setSubject("access-token")   //user idx가 지정될 것
                 .claim(AUTHORITIES_KEY, authorities)
+                .claim(ID, id)
                 .setIssuedAt(now)   //발급시간
                 .setExpiration(expiration)  //만료시간
                 .signWith(SignatureAlgorithm.HS512, signingKey)
@@ -64,6 +67,7 @@ public class JwtTokenProvider implements InitializingBean {
 
         String refreshToken = Jwts.builder()
                 .setSubject("refresh-token")
+                .setIssuedAt(now)
                 .setExpiration(refresh)
                 .signWith(SignatureAlgorithm.HS512, signingKey)
                 .compact();
@@ -90,6 +94,7 @@ public class JwtTokenProvider implements InitializingBean {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
+        String id = claims.get(ID).toString();
         //UserDetails 객체에 토큰 정보와 생성한 인가 넣고 return
         UserDetails userDetails = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
@@ -145,7 +150,7 @@ public class JwtTokenProvider implements InitializingBean {
     private Claims parseClaims(String accessToken) {
         try {
             //올바른 토큰이면 true
-            return Jwts.parserBuilder().setSigningKey(secretKey).build()
+            return Jwts.parserBuilder().setSigningKey(signingKey).build()
                     .parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             //만료 토큰이어도 토큰 정보 꺼내서 return
