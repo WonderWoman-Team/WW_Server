@@ -71,6 +71,10 @@ public class DeliveryPost extends BaseTimeEntity {
 
     }
 
+    public void setPostStatus(PostStatus status) {
+        this.postStatus = status;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -83,5 +87,4 @@ public class DeliveryPost extends BaseTimeEntity {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
-
 }
