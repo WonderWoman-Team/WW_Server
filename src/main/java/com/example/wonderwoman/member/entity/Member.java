@@ -39,6 +39,9 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "imgUrl")
+    private String imgUrl;
+
     @Builder
     public Member(String email, String nickname, String password, School school) {
         this.email = email;
@@ -46,9 +49,14 @@ public class Member {
         this.password = password;
         this.school = school;
         this.role = Role.ROLE_USER;
+        this.imgUrl = null;
     }
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void updateImage(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }

@@ -26,14 +26,14 @@ public class MemberRequestDto {
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String email;
 
-    private String school;
+    private School school;
 
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .nickname(nickname)
                 .password(password)
                 .email(email)
-                .school(School.valueOf(school))
+                .school(school)
                 .build();
     }
 }
