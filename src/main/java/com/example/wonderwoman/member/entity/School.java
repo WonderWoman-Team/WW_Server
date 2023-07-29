@@ -49,7 +49,7 @@ public enum School {
                     Building.NewEngineering,
                     Building.Library
             )),
-    SUKMYEONG("숙명여자대학교",
+    SOOKMYUNG("숙명여자대학교",
             Arrays.asList(
                     Building.Sunheon,
                     Building.Myungshin,

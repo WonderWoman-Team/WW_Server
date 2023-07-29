@@ -22,13 +22,20 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'junit:junit:4.13.1'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'mysql:mysql-connector-java:8.0.27'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j:8.0.32'
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // SpringSecurity
@@ -38,6 +45,8 @@ dependencies {
     //Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation('it.ozimov:embedded-redis:0.7.3') { exclude group: "org.slf4j", module: "slf4j-simple" }
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     //websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'

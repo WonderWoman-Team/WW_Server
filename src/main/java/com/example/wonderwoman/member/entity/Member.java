@@ -7,6 +7,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Getter
@@ -38,6 +44,7 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+    private Authentication authorities;
 
     @Column(name = "imgUrl")
     private String imgUrl;
@@ -59,4 +66,11 @@ public class Member {
     public void updateImage(String imgUrl) {
         this.imgUrl = imgUrl;
     }
+  
+    public Authentication getAuthorities() {
+
+        return authorities;
+
+    }
+
 }

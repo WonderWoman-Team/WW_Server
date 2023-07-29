@@ -9,7 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class NormalResponseDto {
     private String status;
+    private String message;
 
+    
     protected NormalResponseDto(String status) {
         this.status = status;
     }
@@ -20,5 +22,9 @@ public class NormalResponseDto {
 
     public static NormalResponseDto fail() {
         return new NormalResponseDto("FAIL");
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public enum ReqType {
     REQUEST("요청"),
-    DISPATCH("충동");
+    DISPATCH("출동");
 
     private static final Map<String, ReqType> statusMap = Stream.of(values())
             .collect(Collectors.toMap(ReqType::getTypeName, Function.identity()));

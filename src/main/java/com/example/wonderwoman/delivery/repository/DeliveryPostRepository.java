@@ -5,8 +5,12 @@ import com.example.wonderwoman.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface DeliveryPostRepository extends JpaRepository<DeliveryPost, Long> {
 
+    // 게시글 유형에 따른 게시물 조회
+    List<DeliveryPost> findByPostReqType(String postReqType);
 }
