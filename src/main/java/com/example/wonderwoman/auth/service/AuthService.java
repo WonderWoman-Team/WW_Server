@@ -38,7 +38,7 @@ public class AuthService {
     // 회원가입
     public void joinMember(MemberRequestDto requestDto) {
         if (findMemberByEmail(requestDto.getEmail()))
-            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+            throw new WonderException(ErrorCode.ALREADY_MEMBER);
 
         Member member = requestDto.toMember(passwordEncoder); // 비밀번호를 인코딩하여 저장
         memberRepository.save(member);
