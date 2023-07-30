@@ -1,24 +1,17 @@
 package com.example.wonderwoman.member.entity;
 
+import com.example.wonderwoman.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.Collection;
-import java.util.Collections;
+import lombok.*;
 
 @Entity
 @Getter
 @Table(name = "member")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +37,6 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-    private Authentication authorities;
 
     @Column(name = "imgUrl")
     private String imgUrl;
@@ -65,12 +57,6 @@ public class Member {
 
     public void updateImage(String imgUrl) {
         this.imgUrl = imgUrl;
-    }
-  
-    public Authentication getAuthorities() {
-
-        return authorities;
-
     }
 
 }
