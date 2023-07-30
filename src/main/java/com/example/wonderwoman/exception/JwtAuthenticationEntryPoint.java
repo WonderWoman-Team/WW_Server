@@ -1,6 +1,5 @@
 package com.example.wonderwoman.exception;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -14,7 +13,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authenticationException) throws IOException, ServletException {
+                         AuthenticationException authenticationException) throws IOException {
         //유효하지 않은 자격증명일 때 401 error
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }

@@ -1,7 +1,6 @@
-package com.example.wonderwoman.config;
+package com.example.wonderwoman.jwt;
 
-import com.example.wonderwoman.jwt.JwtAuthenticationFilter;
-import com.example.wonderwoman.jwt.JwtTokenProvider;
+import com.example.wonderwoman.login.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,8 +12,8 @@ public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public void configure(HttpSecurity httpSecurity) {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtTokenProvider);
-        httpSecurity.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+    public void configure(HttpSecurity httpSecurity) throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

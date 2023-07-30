@@ -1,6 +1,5 @@
 package com.example.wonderwoman.exception;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,7 +13,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                       AccessDeniedException accessDeniedException) throws IOException {
         //필요한 권한 없이 접근시 403 error
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
 

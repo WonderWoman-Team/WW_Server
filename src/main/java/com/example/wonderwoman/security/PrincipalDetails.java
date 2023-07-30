@@ -1,38 +1,36 @@
-package com.example.wonderwoman.login;
+package com.example.wonderwoman.security;
 
 import com.example.wonderwoman.member.entity.Member;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Slf4j
+@RequiredArgsConstructor
+@Getter
 public class PrincipalDetails implements UserDetails {
 
-    private Member user;
+    private final Member member;
 
-    public PrincipalDetails(Member user) {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+        authorities.add(() -> member.getRole().getRoleName()); // key: ROLE_권한
         return authorities;
     }
 
     @Override
-    public String getPassword() {
-        return user.getPassword();
+    public String getUsername() {
+        return member.getEmail();
     }
 
     @Override
-    public String getUsername() {
-        return user.getEmail();
+    public String getPassword() {
+        return member.getPassword();
     }
 
     @Override
