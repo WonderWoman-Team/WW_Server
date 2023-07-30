@@ -2,10 +2,13 @@ package com.example.wonderwoman.config;
 
 import com.example.wonderwoman.exception.JwtAccessDeniedHandler;
 import com.example.wonderwoman.exception.JwtAuthenticationEntryPoint;
-import com.example.wonderwoman.jwt.JwtTokenProvider;
+import com.example.wonderwoman.jwt.JwtAuthenticationFilter;
+import com.example.wonderwoman.login.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -15,12 +18,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -28,10 +27,8 @@ import java.util.Arrays;
 @Component
 public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
-
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     //회원 패스워드 암호화해서 저장해야 함
     @Bean
@@ -40,17 +37,26 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(httpSecurityCorsConfigurer -> corsConfigurationSource());
 
         http.httpBasic(HttpBasicConfigurer::disable)
-                .csrf(CsrfConfigurer::disable)
+                .csrf(CsrfConfigurer::disable)  //
                 .formLogin(FormLoginConfigurer::disable)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .authorizeRequests()
-                .requestMatchers("/app/auth/**").permitAll()
+                .authorizeRequests() //
+                .requestMatchers("/app/auth/signup/**",
+                        "app/auth/login",
+                        "app/auth/validate",
+                        "app/auth/reissue").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling((exceptionHandling) ->
@@ -59,23 +65,9 @@ public class WebSecurityConfig {
                                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 );
 
-
-        http.apply(new JwtSecurityConfig(jwtTokenProvider));
+        //http.apply(new JwtSecurityConfig(jwtTokenProvider));
         return http.build();
     }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
 
 }
 

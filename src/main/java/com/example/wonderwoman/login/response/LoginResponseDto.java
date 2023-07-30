@@ -1,4 +1,4 @@
-package com.example.wonderwoman.login;
+package com.example.wonderwoman.login.response;
 
 public class LoginResponseDto {
     private String accessToken;

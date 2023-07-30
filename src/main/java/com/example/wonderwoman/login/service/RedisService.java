@@ -1,4 +1,4 @@
-package com.example.wonderwoman.auth.service;
+package com.example.wonderwoman.login.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
