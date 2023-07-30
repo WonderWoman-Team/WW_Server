@@ -31,7 +31,7 @@ public class MemberRequestDto {
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .nickname(nickname)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .email(email)
                 .school(school)
                 .build();
