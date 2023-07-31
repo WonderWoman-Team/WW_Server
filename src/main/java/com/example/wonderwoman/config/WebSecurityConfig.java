@@ -56,7 +56,8 @@ public class WebSecurityConfig {
                 .requestMatchers("/app/auth/signup/**",
                         "app/auth/login",
                         "app/auth/validate",
-                        "app/auth/reissue").permitAll()
+                        "app/auth/reissue",
+                        "/app/delivery/post").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling((exceptionHandling) ->
