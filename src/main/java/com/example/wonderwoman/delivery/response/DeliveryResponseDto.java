@@ -1,4 +1,4 @@
-package com.example.wonderwoman.delivery;
+package com.example.wonderwoman.delivery.response;
 
 import com.example.wonderwoman.building.entity.Building;
 import com.example.wonderwoman.delivery.entity.*;

@@ -51,7 +51,7 @@ public class DeliveryPost extends BaseTimeEntity {
     private String postComment;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "writer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "writer_id", referencedColumnName = "id")
     private Member member;
 
     @Builder
