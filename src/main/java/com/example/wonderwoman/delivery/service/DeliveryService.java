@@ -37,14 +37,9 @@ public class DeliveryService {
 //                .collect(Collectors.toList());
 //    }
 
-    // 게시글 조회 - 유형:요청
-    public List<DeliveryPost> getDeliveryPostsByTypeRequest() {
-        return deliveryPostRepository.findByPostReqType(ReqType.REQUEST.getTypeName());
-    }
-
-    // 게시글 조회 - 유형:출동
-    public List<DeliveryPost> getDeliveryPostsByTypeDispatch() {
-        return deliveryPostRepository.findByPostReqType(ReqType.DISPATCH.getTypeName());
+    // 게시글 조회 - 유형: 요청/출동
+    public List<DeliveryPost> getDeliveryPostsByType(ReqType reqType) {
+        return deliveryPostRepository.findByPostReqType(reqType);
     }
 
     // DeliveryPost를 DeliveryPostResponseDto로 변환하는 메서드

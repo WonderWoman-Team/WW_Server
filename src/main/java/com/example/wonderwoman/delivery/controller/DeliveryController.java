@@ -4,6 +4,7 @@ import com.example.wonderwoman.common.dto.NormalResponseDto;
 import com.example.wonderwoman.delivery.DeliveryPostResponseDto;
 import com.example.wonderwoman.delivery.DeliveryResponseDto;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
+import com.example.wonderwoman.delivery.entity.ReqType;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
 import com.example.wonderwoman.delivery.service.DeliveryService;
 import com.example.wonderwoman.member.entity.Member;
@@ -37,6 +38,7 @@ public class DeliveryController {
 
     @ResponseBody
     public ResponseEntity<List<DeliveryPost>> getAllDeliveryPosts() {
+        System.out.println("GET all delivery posts OK");
         List<DeliveryPost> deliveryPosts = deliveryService.getAllDeliveryPosts();
         return ResponseEntity.ok(deliveryPosts);
     }
@@ -57,18 +59,21 @@ public class DeliveryController {
 //    }
 
     // 딜리버리 게시글 조회 - 유형: 요청
-    @GetMapping(params = "category=request")
+    @GetMapping(value = "/post", params = "category=request")
     @ResponseBody
-    public ResponseEntity<List<DeliveryPost>> getDeliveryPostsByTypeRequest() {
-        List<DeliveryPost> requestDeliveryPosts = deliveryService.getDeliveryPostsByTypeRequest();
-        return ResponseEntity.ok(requestDeliveryPosts);
+    public ResponseEntity<List<DeliveryPost>> getDeliveryPostsByTypeRequest(@RequestParam("category") String category) {
+        if ("request".equals(category)) {
+            List<DeliveryPost> requestDeliveryPosts = deliveryService.getDeliveryPostsByType(ReqType.REQUEST);
+            return ResponseEntity.ok(requestDeliveryPosts);
+        }
+        return null;
     }
 
     // 딜리버리 게시글 조회 - 유형: 출동
-    @GetMapping(params = "category=dispatch")
+    @GetMapping(value = "/post", params = "category=dispatch")
     @ResponseBody
     public ResponseEntity<List<DeliveryPost>> getDeliveryPostsByTypeDispatch() {
-        List<DeliveryPost> dispatchDeliveryPosts = deliveryService.getDeliveryPostsByTypeDispatch();
+        List<DeliveryPost> dispatchDeliveryPosts = deliveryService.getDeliveryPostsByType(ReqType.DISPATCH);
         return ResponseEntity.ok(dispatchDeliveryPosts);
     }
 
