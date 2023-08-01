@@ -1,17 +1,16 @@
 package com.example.wonderwoman.delivery.service;
 
-import com.example.wonderwoman.delivery.DeliveryPostResponseDto;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.entity.ReqType;
 import com.example.wonderwoman.delivery.repository.DeliveryPostRepository;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
+import com.example.wonderwoman.delivery.response.DeliveryPostResponseDto;
 import com.example.wonderwoman.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
