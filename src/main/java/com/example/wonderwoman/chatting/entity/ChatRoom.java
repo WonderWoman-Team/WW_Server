@@ -6,9 +6,7 @@ import com.example.wonderwoman.exception.ErrorCode;
 import com.example.wonderwoman.exception.WonderException;
 import com.example.wonderwoman.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,23 +15,23 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class ChatRoom extends BaseTimeEntity implements Serializable {
 
     private static final long serialVersionUID = 6494678977089006639L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "room_id")
+    @Column(name = "roomId")
     private String id;
 
-    @Column
+    @Column(length = 1000)
     private String lastMessage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deliveryPost_id", referencedColumnName = "id")
-    private DeliveryPost post;
+    private DeliveryPost deliveryPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "callerId", referencedColumnName = "id")
@@ -43,7 +41,7 @@ public class ChatRoom extends BaseTimeEntity implements Serializable {
     @JoinColumn(name = "helperId", referencedColumnName = "id")
     private Member helper;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> chatMessageList = new ArrayList<>();
 
     @Builder
@@ -51,19 +49,19 @@ public class ChatRoom extends BaseTimeEntity implements Serializable {
         this.id = UUID.randomUUID().toString();
         this.caller = caller;
         this.helper = helper;
-        this.post = deliveryPost;
+        this.deliveryPost = deliveryPost;
     }
 
     public void updateLastMessage(String lastMessage) {
-        if (Objects.nonNull(lastMessage)) {
+        if (!Objects.nonNull(lastMessage)) {
             throw new WonderException(ErrorCode.VALUE_IS_NONNULL);
-        } else
+        } else {
             this.lastMessage = lastMessage;
+        }
     }
 
     public void addChatMessage(ChatMessage message) {
         this.chatMessageList.add(message);
     }
-
 
 }

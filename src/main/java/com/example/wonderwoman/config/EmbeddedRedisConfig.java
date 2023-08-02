@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import redis.embedded.RedisServer;
 
 
-@Profile("local")
+@Profile("local")   //로컬일 경우 내장 레디스
 @Configuration
 public class EmbeddedRedisConfig {
 
