@@ -10,13 +10,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "delivery_post")
-public class DeliveryPost extends BaseTimeEntity {
+public class DeliveryPost extends BaseTimeEntity implements Serializable {
 
     //게시물 id
     @Id
@@ -69,6 +70,10 @@ public class DeliveryPost extends BaseTimeEntity {
         this.postComment = postComment;
         this.member = member;
 
+    }
+
+    public boolean isWrittenPost(Member member) {
+        return this.member.getId().equals(member.getId());
     }
 
     public void setPostStatus(PostStatus status) {

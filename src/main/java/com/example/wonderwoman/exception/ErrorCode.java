@@ -16,7 +16,9 @@ public enum ErrorCode {
     VALUE_IS_NONNULL(HttpStatus.BAD_REQUEST, "값을 반드시 넣어야 합니다.", "null 값이 허용되지 않으므로 반드시 값을 전달해주세요."),
     CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "채팅방을 찾지 못했습니다.", "존재하는 채팅방인지 확인해주세요."),
     REDIS_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "레디스 오류입니다.", "레디스 연결을 확인해주세요."),
-    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "글을 찾지 못했습니다.", "존재하는 글인지 확인해주세요.");
+    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "글을 찾지 못했습니다.", "존재하는 글인지 확인해주세요."),
+    FORBIDDEN_CHATROOM(HttpStatus.FORBIDDEN, "채팅방에 접근 권한이 없습니다.", "채팅방에 참여하는 회원인지 확인해주세요."),
+    ARTICLE_CAN_NOT_DELETE(HttpStatus.FORBIDDEN, "이미 진행중인 글입니다.", "어떠한 상태도 없는 글인지 확인해주세요.");
 
     private final HttpStatus httpStatus;
     private final String message;
