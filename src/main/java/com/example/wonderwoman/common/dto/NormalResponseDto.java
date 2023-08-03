@@ -24,6 +24,8 @@ public class NormalResponseDto {
         return new NormalResponseDto("FAIL");
     }
 
+    public static NormalResponseDto error() { return new NormalResponseDto("올바른 건물을 선택해주세요."); }
+
     public void setMessage(String message) {
         this.message = message;
     }

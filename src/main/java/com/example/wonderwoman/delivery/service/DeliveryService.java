@@ -1,5 +1,7 @@
 package com.example.wonderwoman.delivery.service;
 
+import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.building.service.BuildingService;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.entity.SanitarySize;
 import com.example.wonderwoman.delivery.repository.DeliveryPostRepository;
@@ -7,6 +9,7 @@ import com.example.wonderwoman.delivery.repository.DeliveryRepositoryImpl;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
 import com.example.wonderwoman.delivery.response.DeliveryResponseDto;
 import com.example.wonderwoman.member.entity.Member;
+import com.example.wonderwoman.member.entity.School;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -20,8 +23,14 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class DeliveryService {
+    private final BuildingService buildingService;
     private final DeliveryPostRepository deliveryPostRepository;
     private final DeliveryRepositoryImpl deliveryRepositoryImpl;
+
+    // 학교 정보를 기반으로 건물 목록 조회
+    public List<Building> getBuildingsBySchool(School school) {
+        return buildingService.getBuildingsBySchool(school);
+    }
 
     // 게시글 작성
     public void postDelivery(Member member, DeliveryRequestDto requestDto) {

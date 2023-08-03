@@ -1,5 +1,6 @@
 package com.example.wonderwoman.delivery.controller;
 
+import com.example.wonderwoman.building.entity.Building;
 import com.example.wonderwoman.common.dto.NormalResponseDto;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
 import com.example.wonderwoman.delivery.response.DeliveryResponseDto;
@@ -32,6 +33,16 @@ public class DeliveryController {
     @PostMapping("")
     public ResponseEntity<NormalResponseDto> postDelivery(@CurrentUser Member member, @RequestBody @Valid DeliveryRequestDto requestDto) {
         requestDto.setSchool(member.getSchool());
+
+        Building selectedBuilding = requestDto.getBuilding();
+
+        List<Building> buildings = deliveryService.getBuildingsBySchool(member.getSchool());
+
+        // 사용자가 선택한 건물이 올바른지 확인
+        if (!buildings.contains(selectedBuilding)) {
+            return ResponseEntity.badRequest().body(NormalResponseDto.error());
+        }
+
         deliveryService.postDelivery(member, requestDto);
         return ResponseEntity.ok(NormalResponseDto.success());
     }
