@@ -31,6 +31,7 @@ public class DeliveryController {
     //딜리버리 게시글 작성
     @PostMapping("")
     public ResponseEntity<NormalResponseDto> postDelivery(@CurrentUser Member member, @RequestBody @Valid DeliveryRequestDto requestDto) {
+        requestDto.setSchool(member.getSchool());
         deliveryService.postDelivery(member, requestDto);
         return ResponseEntity.ok(NormalResponseDto.success());
     }
