@@ -43,7 +43,7 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-verion: '17'
+          java-version: '17'
           distribution: 'temurin'
 
       # 3) gradlew  권한 설정
