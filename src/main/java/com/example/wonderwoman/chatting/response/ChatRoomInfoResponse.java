@@ -51,7 +51,7 @@ public class ChatRoomInfoResponse {
                 .school(chatRoom.getDeliveryPost().getSchool())
                 .building(chatRoom.getDeliveryPost().getBuilding())
                 .sanitarySize(chatRoom.getDeliveryPost().getSanitarySize())
-                .sanitaryNum(chatRoom.getDeliveryPost().getPostNumber())
+                .sanitaryNum(chatRoom.getDeliveryPost().getSanitaryNum())
                 .createdAt(chatRoom.getJoinedAt())
                 .lastMessage(chatRoom.getLastMessage())
                 .build();
