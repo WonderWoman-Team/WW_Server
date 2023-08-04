@@ -1,4 +1,4 @@
-package com.example.wonderwoman.building.entity;
+package com.example.wonderwoman.delivery.entity;
 
 import com.example.wonderwoman.exception.ErrorCode;
 import com.example.wonderwoman.exception.WonderException;

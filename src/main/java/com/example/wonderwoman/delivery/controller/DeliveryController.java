@@ -1,6 +1,6 @@
 package com.example.wonderwoman.delivery.controller;
 
-import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.common.dto.NormalResponseDto;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
 import com.example.wonderwoman.delivery.response.DeliveryResponseDto;

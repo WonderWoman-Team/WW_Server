@@ -1,6 +1,6 @@
 package com.example.wonderwoman.delivery.repository;
 
-import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.entity.ReqType;
 import com.example.wonderwoman.delivery.entity.SanitarySize;

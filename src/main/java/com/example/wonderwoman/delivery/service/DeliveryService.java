@@ -1,6 +1,6 @@
 package com.example.wonderwoman.delivery.service;
 
-import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.building.service.BuildingService;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.entity.SanitarySize;

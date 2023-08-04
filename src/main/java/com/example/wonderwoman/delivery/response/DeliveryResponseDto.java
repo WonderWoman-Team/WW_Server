@@ -1,6 +1,5 @@
 package com.example.wonderwoman.delivery.response;
 
-import com.example.wonderwoman.building.entity.Building;
 import com.example.wonderwoman.delivery.entity.*;
 import com.example.wonderwoman.member.entity.School;
 import lombok.AllArgsConstructor;
