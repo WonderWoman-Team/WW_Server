@@ -7,45 +7,37 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class DeliveryResponseDto {
     private Long id;
-
     private Long memberId;
-
     private String nickname;
-
-    private String title;
-
+    private String joinedAt;
     private School school;
-
     private Building building;
-
     private PostStatus postStatus;
-
     private String postTitle;
-
     private ReqType postReqType;
-
     private int postNumber;
-
     private SanitarySize sanitarySize;
-
     private SanitaryType sanitaryType;
-
     private String postComment;
-
     private boolean isWritten;
 
     public static DeliveryResponseDto of(DeliveryPost deliveryPost, boolean isWritten) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String joinedAtString = deliveryPost.getJoinedAt().format(formatter);
+
         return DeliveryResponseDto.builder()
                 .id(deliveryPost.getId())
                 .memberId(deliveryPost.getMember().getId())
                 .nickname(deliveryPost.getMember().getNickname())
-                .title(deliveryPost.getPostTitle())
+                .joinedAt(joinedAtString)
                 .school(deliveryPost.getSchool())
                 .building(deliveryPost.getBuilding())
                 .postStatus(deliveryPost.getPostStatus())
