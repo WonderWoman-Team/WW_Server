@@ -1,7 +1,6 @@
 package com.example.wonderwoman.delivery.service;
 
 import com.example.wonderwoman.delivery.entity.Building;
-import com.example.wonderwoman.building.service.BuildingService;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.entity.SanitarySize;
 import com.example.wonderwoman.delivery.repository.DeliveryPostRepository;
@@ -23,13 +22,14 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class DeliveryService {
-    private final BuildingService buildingService;
     private final DeliveryPostRepository deliveryPostRepository;
     private final DeliveryRepositoryImpl deliveryRepositoryImpl;
 
     // 학교 정보를 기반으로 건물 목록 조회
     public List<Building> getBuildingsBySchool(School school) {
-        return buildingService.getBuildingsBySchool(school);
+        List<Building> buildings = school.getBuildingList();
+        System.out.println("회원의 학교: " + school + "에 해당하는 건물 목록: " + buildings);
+        return buildings;
     }
 
     // 게시글 작성
