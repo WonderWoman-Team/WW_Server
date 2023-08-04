@@ -5,6 +5,8 @@ import com.example.wonderwoman.common.dto.NormalResponseDto;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
 import com.example.wonderwoman.delivery.response.DeliveryResponseDto;
 import com.example.wonderwoman.delivery.service.DeliveryService;
+import com.example.wonderwoman.exception.ErrorCode;
+import com.example.wonderwoman.exception.WonderException;
 import com.example.wonderwoman.login.CurrentUser;
 import com.example.wonderwoman.member.entity.Member;
 import jakarta.validation.Valid;
@@ -40,7 +42,7 @@ public class DeliveryController {
 
         // 사용자가 선택한 건물이 올바른지 확인
         if (!buildings.contains(selectedBuilding)) {
-            return ResponseEntity.badRequest().body(NormalResponseDto.error());
+            throw new WonderException(ErrorCode.BUILDING_NOT_MATCH);
         }
 
         deliveryService.postDelivery(member, requestDto);
