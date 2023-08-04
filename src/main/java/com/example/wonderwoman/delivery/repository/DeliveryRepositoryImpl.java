@@ -6,6 +6,7 @@ import com.example.wonderwoman.delivery.entity.ReqType;
 import com.example.wonderwoman.delivery.entity.SanitarySize;
 import com.example.wonderwoman.delivery.response.DeliveryResponseDto;
 import com.example.wonderwoman.member.entity.Member;
+import com.example.wonderwoman.member.entity.School;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -33,12 +34,14 @@ public class DeliveryRepositoryImpl {
 
     public Slice<DeliveryResponseDto> getSliceOfDelivery(Member member,
                                                          final String reqType,
+                                                         final String school,
                                                          final String building,
                                                          final List<SanitarySize> sanitarySize,
                                                          Pageable pageable) {
         JPAQuery<DeliveryPost> results = queryFactory.selectFrom(deliveryPost)
                 .where(
                         reqTypeLike(reqType),
+                        schoolLike(school),
                         buildingLike(building),
                         sanitarySizeEq(sanitarySize)
                 )
@@ -67,6 +70,10 @@ public class DeliveryRepositoryImpl {
 
     public BooleanExpression reqTypeLike(final String reqType) {
         return StringUtils.hasText(reqType) ? deliveryPost.postReqType.eq(ReqType.resolve(reqType)) : null;
+    }
+
+    public BooleanExpression schoolLike(final String school) {
+        return StringUtils.hasText(school) ? deliveryPost.school.eq(School.resolve(school)) : null;
     }
 
     private BooleanExpression buildingLike(final String building) {

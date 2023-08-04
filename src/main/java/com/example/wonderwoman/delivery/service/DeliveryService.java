@@ -41,6 +41,7 @@ public class DeliveryService {
     // 게시글 조회 - 전체
     public Slice<DeliveryResponseDto> getAllDeliveryPosts(Member member,
                                                           String reqType,
+                                                          String school,
                                                           String building,
                                                           List<String> sizeList,
                                                           Pageable pageable) {
@@ -50,7 +51,7 @@ public class DeliveryService {
         for (String size : sizeList) {
             sanitarySizes.add(SanitarySize.resolve(size));
         }
-        return deliveryRepositoryImpl.getSliceOfDelivery(member, reqType, building, sanitarySizes, pageable);
+        return deliveryRepositoryImpl.getSliceOfDelivery(member, reqType, school, building, sanitarySizes, pageable);
     }
 
 
