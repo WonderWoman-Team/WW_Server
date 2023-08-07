@@ -54,7 +54,7 @@ public class DeliveryController {
     public ResponseEntity<Slice<DeliveryResponseDto>> getAllDeliveryPosts(@CurrentUser Member member,
                                                                           @RequestParam(value = "reqType", required = false) String reqType,
                                                                           @RequestParam(value = "school", required = false) String school,
-                                                                          @RequestParam(value = "building", required = false) String building,
+                                                                          @RequestParam(value = "building", defaultValue = "") List<Building> building,
                                                                           @RequestParam(value = "size", defaultValue = "") List<String> sizeList,
                                                                           @PageableDefault(sort = "joinedAt", direction = DESC) Pageable pageable) {
         return ResponseEntity.ok(deliveryService.getAllDeliveryPosts(member, reqType, school, building, sizeList, pageable));
