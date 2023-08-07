@@ -1,23 +1,36 @@
 package com.example.wonderwoman.delivery.service;
 
-import com.example.wonderwoman.delivery.DeliveryPostResponseDto;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
-import com.example.wonderwoman.delivery.entity.ReqType;
+import com.example.wonderwoman.delivery.entity.SanitarySize;
 import com.example.wonderwoman.delivery.repository.DeliveryPostRepository;
+import com.example.wonderwoman.delivery.repository.DeliveryRepositoryImpl;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
+import com.example.wonderwoman.delivery.response.DeliveryResponseDto;
 import com.example.wonderwoman.member.entity.Member;
+import com.example.wonderwoman.member.entity.School;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class DeliveryService {
     private final DeliveryPostRepository deliveryPostRepository;
+    private final DeliveryRepositoryImpl deliveryRepositoryImpl;
+
+    // 학교 정보를 기반으로 건물 목록 조회
+    public List<Building> getBuildingsBySchool(School school) {
+        List<Building> buildings = school.getBuildingList();
+        System.out.println("회원의 학교: " + school + "에 해당하는 건물 목록: " + buildings);
+        return buildings;
+    }
 
     // 게시글 작성
     public void postDelivery(Member member, DeliveryRequestDto requestDto) {
@@ -26,37 +39,20 @@ public class DeliveryService {
     }
 
     // 게시글 조회 - 전체
-    public List<DeliveryPost> getAllDeliveryPosts() {
-        return deliveryPostRepository.findAll();
-    }
-//    public List<DeliveryPostResponseDto> getAllDeliveryPosts() {
-//        List<DeliveryPost> deliveryPosts = deliveryPostRepository.findAll();
-//        // DeliveryPost를 DeliveryPostResponseDto로 변환하여 리스트로 반환
-//        return deliveryPosts.stream()
-//                .map(this::convertToResponseDto)
-//                .collect(Collectors.toList());
-//    }
+    public Slice<DeliveryResponseDto> getAllDeliveryPosts(Member member,
+                                                          String reqType,
+                                                          String school,
+                                                          String building,
+                                                          List<String> sizeList,
+                                                          Pageable pageable) {
 
-    // 게시글 조회 - 유형:요청
-    public List<DeliveryPost> getDeliveryPostsByTypeRequest() {
-        return deliveryPostRepository.findByPostReqType(ReqType.REQUEST.getTypeName());
-    }
+        List<SanitarySize> sanitarySizes = new ArrayList<>();
 
-    // 게시글 조회 - 유형:출동
-    public List<DeliveryPost> getDeliveryPostsByTypeDispatch() {
-        return deliveryPostRepository.findByPostReqType(ReqType.DISPATCH.getTypeName());
+        for (String size : sizeList) {
+            sanitarySizes.add(SanitarySize.resolve(size));
+        }
+        return deliveryRepositoryImpl.getSliceOfDelivery(member, reqType, school, building, sanitarySizes, pageable);
     }
 
-    // DeliveryPost를 DeliveryPostResponseDto로 변환하는 메서드
-    private DeliveryPostResponseDto convertToResponseDto(DeliveryPost deliveryPost) {
-        return new DeliveryPostResponseDto(
-                deliveryPost.getPostTitle(),
-                deliveryPost.getPostReqType().getTypeName(),
-                deliveryPost.getPostNumber(),
-                deliveryPost.getSanitarySize().getSizeName(),
-                deliveryPost.getSanitaryType().getTypeName(),
-                deliveryPost.getPostStatus().getStatusName()
-        );
-    }
 
 }

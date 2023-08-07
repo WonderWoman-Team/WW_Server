@@ -1,11 +1,21 @@
-package com.example.wonderwoman.building.entity;
+package com.example.wonderwoman.delivery.entity;
 
+import com.example.wonderwoman.exception.ErrorCode;
+import com.example.wonderwoman.exception.WonderException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Getter
 @RequiredArgsConstructor
-public enum BuildingName {
+public enum Building {
     ECC("이화캠퍼스복합단지(ECC)"),
     HakGwan("학관"),
     POSCO("포스코관"),
@@ -54,9 +64,15 @@ public enum BuildingName {
 
     Library("중앙도서관");
 
-    private String value;
+    private static final Map<String, Building> buildingMap = Stream.of(values())
+            .collect(Collectors.toMap(Building::getValue, Function.identity()));
 
-    BuildingName(String value) {
-        this.value = value;
+    @JsonValue
+    private final String value;
+
+    @JsonCreator
+    public static Building resolve(String value) {
+        return Optional.ofNullable(buildingMap.get(value))
+                .orElseThrow(() -> new WonderException(ErrorCode.VALUE_NOT_IN_OPTION));
     }
 }

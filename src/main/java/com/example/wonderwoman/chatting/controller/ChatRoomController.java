@@ -1,69 +1,81 @@
 package com.example.wonderwoman.chatting.controller;
 
-import com.example.wonderwoman.chatting.entity.ChatMessage;
 import com.example.wonderwoman.chatting.entity.ChatRoom;
 import com.example.wonderwoman.chatting.entity.ListResult;
+import com.example.wonderwoman.chatting.repository.ChatRoomRepository;
 import com.example.wonderwoman.chatting.request.ChatRoomRequest;
 import com.example.wonderwoman.chatting.request.ChatRoomStatusRequest;
+import com.example.wonderwoman.chatting.response.ChatMessageResponse;
 import com.example.wonderwoman.chatting.response.ChatRoomInfoResponse;
-import com.example.wonderwoman.chatting.response.ChatRoomResponse;
 import com.example.wonderwoman.chatting.service.ChatService;
 import com.example.wonderwoman.chatting.service.ResponseService;
 import com.example.wonderwoman.common.dto.NormalResponseDto;
 import com.example.wonderwoman.exception.ErrorCode;
 import com.example.wonderwoman.exception.WonderException;
+import com.example.wonderwoman.login.CurrentUser;
 import com.example.wonderwoman.member.entity.Member;
 import com.example.wonderwoman.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/app/chat")
+@RequestMapping("/app/delivery")
+@Slf4j
 public class ChatRoomController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatRoomController.class);
     private final ChatService chatService;
     private final ResponseService responseService;
     private final MemberRepository memberRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
-
-    //사용자별 전체 방 조회(요청, 출동 상관 없음)
+    //사용자별 전체 방 조회(요청, 출동 상관 없음) -> 완챝
     @GetMapping("/rooms")
-    public ListResult<ChatRoom> rooms(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new WonderException(ErrorCode.MEMBER_NOT_FOUND));
-        return responseService.getListResult(chatService.getMemberEnterRooms(member));
+    public ListResult<ChatRoomInfoResponse> rooms(@CurrentUser Member member) {
+        return responseService.getListResult(chatService.findAllRoom(member));
     }
 
+    //특정 방 정보 조회
+    @GetMapping("/room/info/{roomId}")
+    public ResponseEntity<ChatRoomInfoResponse> roomInfo(@CurrentUser Member member, @PathVariable String roomId) {
+        return ResponseEntity.ok(chatService.findRoomById(member, roomId));
+    }
+
+    //특정 방 메시지 리스트 조회
     @GetMapping("/room/{roomId}")
-    public ResponseEntity<ChatRoomResponse> roomChatMessages(@PathVariable String roomId) {
-        ListResult<ChatMessage> messages = responseService.getListResult(chatService.chatMessageList(roomId));
-        return ResponseEntity.ok(ChatRoomResponse.of(chatService.findRoomById(roomId), messages));
+    public ListResult<ChatMessageResponse> roomChatMessages(@CurrentUser Member member, @PathVariable String roomId) {
+        return responseService.getListResult(chatService.chatMessageList(member, roomId));
     }
 
+
+    //채팅방 생성
     @PostMapping("/room")
-    public ResponseEntity<ChatRoomInfoResponse> createRoom(Long memberId, ChatRoomRequest request) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new WonderException(ErrorCode.MEMBER_NOT_FOUND));
-        ChatRoom chatRoom = chatService.createChatRoom(member, request.getPostId());
-        chatService.enterChatRoom(chatRoom.getId());
-        return ResponseEntity.ok(ChatRoomInfoResponse.of(chatRoom));
+    public ResponseEntity<ChatRoomInfoResponse> createRoom(@CurrentUser Member member, @RequestBody ChatRoomRequest request) {
+        ChatRoomInfoResponse chatRoomInfoResponse = chatService.createChatRoom(member, request.getPostId());
+
+        logger.info("Chat room created by user: {} with room ID: {}", member.getId(), chatRoomInfoResponse.getId());
+
+        return ResponseEntity.ok(chatRoomInfoResponse);
     }
 
+    //딜리버리 상태 변경
     @PostMapping("/room/status")
-    public ResponseEntity<ChatRoomResponse> updateRoomStatus(Long memberId, ChatRoomStatusRequest request) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new WonderException(ErrorCode.MEMBER_NOT_FOUND));
-        ChatRoom chatRoom = chatService.findRoomById(request.getChatRoomId());
+    public ResponseEntity<ChatRoomInfoResponse> updateRoomStatus(@CurrentUser Member member, @RequestBody ChatRoomStatusRequest request) {
+        ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId())
+                .orElseThrow(() -> new WonderException(ErrorCode.CHATROOM_NOT_FOUND));
         chatService.updatePostStatus(chatRoom, request.getStatus());
-        ListResult<ChatMessage> messages = responseService.getListResult(chatService.chatMessageList(chatRoom.getId()));
-        return ResponseEntity.ok(ChatRoomResponse.of(chatRoom, messages));
+        return ResponseEntity.ok(chatService.findRoomById(member, chatRoom.getId()));
     }
 
+    //채팅방 퇴장(삭제)
     @DeleteMapping("/room/{roomId}")
-    public ResponseEntity<NormalResponseDto> deleteRoom(@PathVariable String roomId) {
-        chatService.deleteById(roomId);
+    public ResponseEntity<NormalResponseDto> deleteRoom(@CurrentUser Member member, @PathVariable String roomId) {
+        chatService.deleteById(member, roomId);
         return ResponseEntity.ok(NormalResponseDto.success());
     }
 }

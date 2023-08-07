@@ -1,6 +1,6 @@
 package com.example.wonderwoman.member.entity;
 
-import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.exception.ErrorCode;
 import com.example.wonderwoman.exception.WonderException;
 import com.fasterxml.jackson.annotation.JsonCreator;

@@ -1,6 +1,5 @@
 package com.example.wonderwoman.delivery.entity;
 
-import com.example.wonderwoman.building.entity.Building;
 import com.example.wonderwoman.common.entity.BaseTimeEntity;
 import com.example.wonderwoman.member.entity.Member;
 import com.example.wonderwoman.member.entity.School;
@@ -10,13 +9,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "delivery_post")
-public class DeliveryPost extends BaseTimeEntity {
+public class DeliveryPost extends BaseTimeEntity implements Serializable {
 
     //게시물 id
     @Id
@@ -26,8 +27,11 @@ public class DeliveryPost extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private School school;
 
+    @ElementCollection
+    @CollectionTable(name = "delivery_post_building", joinColumns = @JoinColumn(name = "post_id"))
     @Enumerated(EnumType.STRING)
-    private Building building;
+    @Column(name = "building")
+    private List<Building> building;
 
     @Enumerated(EnumType.STRING)
     private PostStatus postStatus;
@@ -38,8 +42,8 @@ public class DeliveryPost extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ReqType postReqType;
 
-    @Column(name = "post_number", nullable = false)
-    private int postNumber;
+    @Column(name = "sanitary_num", nullable = false)
+    private int sanitaryNum;
 
     @Enumerated(EnumType.STRING)
     private SanitarySize sanitarySize;
@@ -51,24 +55,28 @@ public class DeliveryPost extends BaseTimeEntity {
     private String postComment;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "writer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "writer_id", referencedColumnName = "id")
     private Member member;
 
     @Builder
-    public DeliveryPost(School school, Building building, PostStatus postStatus,
-                        String postTitle, ReqType postReqType, int postNumber, SanitarySize sanitarySize,
+    public DeliveryPost(School school, List<Building> building, PostStatus postStatus,
+                        String postTitle, ReqType postReqType, int sanitaryNum, SanitarySize sanitarySize,
                         SanitaryType sanitaryType, String postComment, Member member) {
         this.school = school;
         this.building = building;
         this.postStatus = postStatus;
         this.postTitle = postTitle;
         this.postReqType = postReqType;
-        this.postNumber = postNumber;
+        this.sanitaryNum = sanitaryNum;
         this.sanitarySize = sanitarySize;
         this.sanitaryType = sanitaryType;
         this.postComment = postComment;
         this.member = member;
 
+    }
+
+    public boolean isWrittenPost(Member member) {
+        return this.member.getId().equals(member.getId());
     }
 
     public void setPostStatus(PostStatus status) {

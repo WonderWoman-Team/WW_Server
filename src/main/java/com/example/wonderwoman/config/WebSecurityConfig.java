@@ -57,7 +57,8 @@ public class WebSecurityConfig {
                         "app/auth/login",
                         "app/auth/validate",
                         "app/auth/reissue",
-                        "/app/delivery/post").permitAll()
+                        "/app/delivery/post",
+                        "/chatting").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling((exceptionHandling) ->

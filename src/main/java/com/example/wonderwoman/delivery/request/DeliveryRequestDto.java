@@ -1,6 +1,6 @@
 package com.example.wonderwoman.delivery.request;
 
-import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.delivery.entity.*;
 import com.example.wonderwoman.member.entity.Member;
 import com.example.wonderwoman.member.entity.School;
@@ -10,30 +10,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class DeliveryRequestDto {
-    //DeliveryPost 엔티티에서 자동 생성되므로 삭제
-    //private DeliveryPostId deliveryPostId;
     private School school;
-    private Building building;
 
+    private List<Building> building;
 
     @NotBlank(message = "제목은 필수 입력값입니다.")
     private String postTitle;
 
-    @NotBlank(message = "요청 또는 출동을 선택하세요.")
-    private ReqType reqType;
+    private ReqType postReqType;
 
-    @NotBlank(message = "개수는 필수 입력값입니다.")
-    private int postNumber;
+    private int sanitaryNum;
 
-    @NotBlank(message = "크기는 필수 입력값입니다.")
     private SanitarySize sanitarySize;
 
-    @NotBlank(message = "종류는 필수 입력값입니다.")
     private SanitaryType sanitaryType;
 
     private String postComment;
@@ -44,8 +40,8 @@ public class DeliveryRequestDto {
                 .building(building)
                 .postStatus(PostStatus.NONE)
                 .postTitle(postTitle)
-                .postReqType(reqType)
-                .postNumber(postNumber)
+                .postReqType(postReqType)
+                .sanitaryNum(sanitaryNum)
                 .sanitarySize(sanitarySize)
                 .sanitaryType(sanitaryType)
                 .postComment(postComment)
