@@ -1,6 +1,6 @@
 package com.example.wonderwoman.chatting.response;
 
-import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.chatting.entity.ChatRoom;
 import com.example.wonderwoman.delivery.entity.PostStatus;
 import com.example.wonderwoman.delivery.entity.SanitarySize;
@@ -51,7 +51,7 @@ public class ChatRoomInfoResponse {
                 .school(chatRoom.getDeliveryPost().getSchool())
                 .building(chatRoom.getDeliveryPost().getBuilding())
                 .sanitarySize(chatRoom.getDeliveryPost().getSanitarySize())
-                .sanitaryNum(chatRoom.getDeliveryPost().getPostNumber())
+                .sanitaryNum(chatRoom.getDeliveryPost().getSanitaryNum())
                 .createdAt(chatRoom.getJoinedAt())
                 .lastMessage(chatRoom.getLastMessage())
                 .build();

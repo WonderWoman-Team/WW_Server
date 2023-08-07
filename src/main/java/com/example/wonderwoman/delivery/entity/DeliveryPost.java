@@ -1,6 +1,5 @@
 package com.example.wonderwoman.delivery.entity;
 
-import com.example.wonderwoman.building.entity.Building;
 import com.example.wonderwoman.common.entity.BaseTimeEntity;
 import com.example.wonderwoman.member.entity.Member;
 import com.example.wonderwoman.member.entity.School;
@@ -39,8 +38,8 @@ public class DeliveryPost extends BaseTimeEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private ReqType postReqType;
 
-    @Column(name = "post_number", nullable = false)
-    private int postNumber;
+    @Column(name = "sanitary_num", nullable = false)
+    private int sanitaryNum;
 
     @Enumerated(EnumType.STRING)
     private SanitarySize sanitarySize;
@@ -57,14 +56,14 @@ public class DeliveryPost extends BaseTimeEntity implements Serializable {
 
     @Builder
     public DeliveryPost(School school, Building building, PostStatus postStatus,
-                        String postTitle, ReqType postReqType, int postNumber, SanitarySize sanitarySize,
+                        String postTitle, ReqType postReqType, int sanitaryNum, SanitarySize sanitarySize,
                         SanitaryType sanitaryType, String postComment, Member member) {
         this.school = school;
         this.building = building;
         this.postStatus = postStatus;
         this.postTitle = postTitle;
         this.postReqType = postReqType;
-        this.postNumber = postNumber;
+        this.sanitaryNum = sanitaryNum;
         this.sanitarySize = sanitarySize;
         this.sanitaryType = sanitaryType;
         this.postComment = postComment;
