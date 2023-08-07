@@ -1,10 +1,18 @@
 package com.example.wonderwoman.chatting.response;
 
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.chatting.entity.ChatRoom;
+import com.example.wonderwoman.delivery.entity.PostStatus;
+import com.example.wonderwoman.delivery.entity.SanitarySize;
+import com.example.wonderwoman.member.entity.Member;
+import com.example.wonderwoman.member.entity.School;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -14,27 +22,39 @@ public class ChatRoomInfoResponse {
 
     private String id;
 
-    private Long callerId;
+    private Long userId;
 
-    private String callerNickName;
+    private String userNickName;
 
-    private String callerImg;
+    private String userImg;
 
-    private Long helperId;
+    private PostStatus postStatus;
 
-    private String helperNickName;
+    private School school;
 
-    private String helperImg;
+    private List<Building> building;
 
-    public static ChatRoomInfoResponse of(ChatRoom chatRoom) {
+    private SanitarySize sanitarySize;
+
+    private int sanitaryNum;
+
+    private LocalDateTime createdAt;
+
+    private String lastMessage;
+
+    public static ChatRoomInfoResponse of(ChatRoom chatRoom, Member member) {
         return ChatRoomInfoResponse.builder()
                 .id(chatRoom.getId())
-                .callerId(chatRoom.getCaller().getId())
-                .callerNickName(chatRoom.getCaller().getNickname())
-                .callerImg(chatRoom.getCaller().getImgUrl())
-                .helperId(chatRoom.getHelper().getId())
-                .helperNickName(chatRoom.getHelper().getNickname())
-                .helperImg(chatRoom.getHelper().getImgUrl())
+                .userId(member.getId())
+                .userNickName(member.getNickname())
+                .userImg(member.getImgUrl())
+                .postStatus(chatRoom.getDeliveryPost().getPostStatus())
+                .school(chatRoom.getDeliveryPost().getSchool())
+                .building(chatRoom.getDeliveryPost().getBuilding())
+                .sanitarySize(chatRoom.getDeliveryPost().getSanitarySize())
+                .sanitaryNum(chatRoom.getDeliveryPost().getSanitaryNum())
+                .createdAt(chatRoom.getJoinedAt())
+                .lastMessage(chatRoom.getLastMessage())
                 .build();
     }
 }
