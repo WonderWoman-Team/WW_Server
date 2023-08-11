@@ -41,7 +41,7 @@ public class DeliveryController {
         List<Building> buildings = deliveryService.getBuildingsBySchool(member.getSchool());
 
         // 사용자가 선택한 건물이 올바른지 확인
-        if (!buildings.contains(selectedBuilding)) {
+        if (!buildings.containsAll(selectedBuilding)) {
             throw new WonderException(ErrorCode.BUILDING_NOT_MATCH);
         }
 
