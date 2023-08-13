@@ -1,21 +1,23 @@
 package com.example.wonderwoman.chatting.entity;
 
-import com.example.wonderwoman.common.entity.BaseTimeEntity;
 import com.example.wonderwoman.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ChatMessage extends BaseTimeEntity {
+public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member sender;  //보낸 이
 
@@ -29,6 +31,10 @@ public class ChatMessage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime sendDate;
 
     @Builder
     public ChatMessage(Member sender, ChatRoom chatRoom, String message, String messageType) {

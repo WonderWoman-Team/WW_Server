@@ -1,16 +1,16 @@
 package com.example.wonderwoman.chatting.response;
 
 import com.example.wonderwoman.chatting.entity.ChatMessage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChatMessageResponse {
+public class ChatMessageDto {
 
     private Long id;
 
@@ -26,8 +26,10 @@ public class ChatMessageResponse {
 
     private String roomId;
 
-    public static ChatMessageResponse of(ChatMessage chatMessage) {
-        return ChatMessageResponse.builder()
+    private LocalDateTime sendTime;
+
+    public static ChatMessageDto of(ChatMessage chatMessage) {
+        return ChatMessageDto.builder()
                 .id(chatMessage.getId())
                 .messageType(chatMessage.getType().toString())
                 .senderId(chatMessage.getSender().getId())
@@ -35,6 +37,7 @@ public class ChatMessageResponse {
                 .senderImg(chatMessage.getSender().getImgUrl())
                 .message(chatMessage.getMessage())
                 .roomId(chatMessage.getChatRoom().getId())
+                .sendTime(chatMessage.getSendDate())
                 .build();
     }
 }
