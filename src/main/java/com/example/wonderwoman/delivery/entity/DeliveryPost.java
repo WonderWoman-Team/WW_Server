@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,9 +26,8 @@ public class DeliveryPost extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private School school;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "delivery_post_building", joinColumns = @JoinColumn(name = "post_id"))
-    @Enumerated(EnumType.STRING)
     @Column(name = "building")
     private List<Building> building;
 
