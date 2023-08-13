@@ -1,6 +1,6 @@
 package com.example.wonderwoman.chatting.response;
 
-import com.example.wonderwoman.building.entity.Building;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.chatting.entity.ChatMessage;
 import com.example.wonderwoman.chatting.entity.ChatRoom;
 import com.example.wonderwoman.chatting.entity.ListResult;
@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -40,7 +41,8 @@ public class ChatRoomResponse {
 
     private School school;
 
-    private Building building;
+    private List<Building> building;
+
 
     private SanitarySize sanitarySize;
 
