@@ -33,7 +33,7 @@ public class ChatRoomInfoResponse {
     private School school;
 
     private List<Building> building;
-
+ 
     private SanitarySize sanitarySize;
 
     private int sanitaryNum;

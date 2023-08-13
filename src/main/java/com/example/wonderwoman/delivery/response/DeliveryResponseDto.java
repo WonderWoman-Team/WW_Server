@@ -20,7 +20,9 @@ public class DeliveryResponseDto {
     private String nickname;
     private String createdAt;
     private School school;
+
     private List<Building> building;
+
     private PostStatus postStatus;
     private String postTitle;
     private ReqType postReqType;

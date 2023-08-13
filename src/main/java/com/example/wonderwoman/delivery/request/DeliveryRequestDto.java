@@ -23,7 +23,7 @@ public class DeliveryRequestDto {
 
     @NotBlank(message = "제목은 필수 입력값입니다.")
     private String postTitle;
-
+    
     private ReqType postReqType;
 
     private int sanitaryNum;

@@ -59,6 +59,7 @@ public class DeliveryPost extends BaseTimeEntity implements Serializable {
     private Member member;
 
     @Builder
+
     public DeliveryPost(School school, List<Building> building, PostStatus postStatus,
                         String postTitle, ReqType postReqType, int sanitaryNum, SanitarySize sanitarySize,
                         SanitaryType sanitaryType, String postComment, Member member) {

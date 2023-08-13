@@ -43,6 +43,7 @@ public class ChatRoomResponse {
 
     private List<Building> building;
 
+
     private SanitarySize sanitarySize;
 
     private LocalDateTime createdAt;

@@ -88,6 +88,9 @@ public class DeliveryRepositoryImpl {
         return booleanBuilder;
     }
 
+    private BooleanExpression buildingLike(final String building) {
+        return StringUtils.hasText(building) ? deliveryPost.building.eq(Building.resolve(building)) : null;
+    }
 
     private BooleanBuilder sanitarySizeEq(final List<SanitarySize> sizeList) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
