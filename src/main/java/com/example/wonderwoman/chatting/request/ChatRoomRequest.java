@@ -17,6 +17,7 @@ public class ChatRoomRequest {
     private Long postId;
 
     //WebSocketSession은 WebSocket Connection이 맺어진 세션
+    @Builder.Default
     private Set<WebSocketSession> sessions = new HashSet<>();
 
 }
