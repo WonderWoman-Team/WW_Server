@@ -39,9 +39,13 @@ public class ChatRoomInfoResponse {
 
     private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
+
     private String lastMessage;
 
-    public static ChatRoomInfoResponse of(ChatRoom chatRoom, Member member) {
+    private boolean isWriter;
+
+    public static ChatRoomInfoResponse of(ChatRoom chatRoom, Member member, boolean isWriter) {
         return ChatRoomInfoResponse.builder()
                 .id(chatRoom.getId())
                 .userId(member.getId())
@@ -53,7 +57,9 @@ public class ChatRoomInfoResponse {
                 .sanitarySize(chatRoom.getDeliveryPost().getSanitarySize())
                 .sanitaryNum(chatRoom.getDeliveryPost().getPostNumber())
                 .createdAt(chatRoom.getJoinedAt())
+                .updatedAt(chatRoom.getUpdatedAt())
                 .lastMessage(chatRoom.getLastMessage())
+                .isWriter(isWriter)
                 .build();
     }
 }

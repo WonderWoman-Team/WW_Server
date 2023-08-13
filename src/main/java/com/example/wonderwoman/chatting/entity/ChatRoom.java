@@ -8,7 +8,6 @@ import com.example.wonderwoman.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ChatRoom extends BaseTimeEntity implements Serializable {
+public class ChatRoom extends BaseTimeEntity {
 
     private static final long serialVersionUID = 6494678977089006639L;
 
@@ -41,7 +40,7 @@ public class ChatRoom extends BaseTimeEntity implements Serializable {
     @JoinColumn(name = "helperId", referencedColumnName = "id")
     private Member helper;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> chatMessageList = new ArrayList<>();
 
     @Builder
