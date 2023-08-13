@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -26,8 +27,11 @@ public class DeliveryPost extends BaseTimeEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private School school;
 
+    @ElementCollection
+    @CollectionTable(name = "delivery_post_building", joinColumns = @JoinColumn(name = "post_id"))
     @Enumerated(EnumType.STRING)
-    private Building building;
+    @Column(name = "building")
+    private List<Building> building;
 
     @Enumerated(EnumType.STRING)
     private PostStatus postStatus;
@@ -55,7 +59,8 @@ public class DeliveryPost extends BaseTimeEntity implements Serializable {
     private Member member;
 
     @Builder
-    public DeliveryPost(School school, Building building, PostStatus postStatus,
+
+    public DeliveryPost(School school, List<Building> building, PostStatus postStatus,
                         String postTitle, ReqType postReqType, int sanitaryNum, SanitarySize sanitarySize,
                         SanitaryType sanitaryType, String postComment, Member member) {
         this.school = school;

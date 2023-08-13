@@ -35,7 +35,7 @@ public class DeliveryRepositoryImpl {
     public Slice<DeliveryResponseDto> getSliceOfDelivery(Member member,
                                                          final String reqType,
                                                          final String school,
-                                                         final String building,
+                                                         final List<Building> building,
                                                          final List<SanitarySize> sanitarySize,
                                                          Pageable pageable) {
         JPAQuery<DeliveryPost> results = queryFactory.selectFrom(deliveryPost)
@@ -74,6 +74,18 @@ public class DeliveryRepositoryImpl {
 
     public BooleanExpression schoolLike(final String school) {
         return StringUtils.hasText(school) ? deliveryPost.school.eq(School.resolve(school)) : null;
+    }
+
+    private BooleanBuilder buildingLike(final List<Building> buildingList) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        if (buildingList.isEmpty()) return booleanBuilder;
+
+        for (Building building : buildingList) {
+            booleanBuilder.or(deliveryPost.building.contains(building));
+        }
+
+        return booleanBuilder;
     }
 
     private BooleanExpression buildingLike(final String building) {

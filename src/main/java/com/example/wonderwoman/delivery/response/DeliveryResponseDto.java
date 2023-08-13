@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -19,7 +20,9 @@ public class DeliveryResponseDto {
     private String nickname;
     private String createdAt;
     private School school;
-    private Building building;
+
+    private List<Building> building;
+
     private PostStatus postStatus;
     private String postTitle;
     private ReqType postReqType;

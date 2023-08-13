@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class DeliveryRequestDto {
     private School school;
 
-    private Building building;
+    private List<Building> building;
 
     @NotBlank(message = "제목은 필수 입력값입니다.")
     private String postTitle;

@@ -36,12 +36,13 @@ public class DeliveryController {
     public ResponseEntity<NormalResponseDto> postDelivery(@CurrentUser Member member, @RequestBody @Valid DeliveryRequestDto requestDto) {
         requestDto.setSchool(member.getSchool());
 
-        Building selectedBuilding = requestDto.getBuilding();
+        List<Building> selectedBuilding = requestDto.getBuilding();
 
         List<Building> buildings = deliveryService.getBuildingsBySchool(member.getSchool());
 
         // 사용자가 선택한 건물이 올바른지 확인
-        if (!buildings.contains(selectedBuilding)) {
+
+        if (!buildings.containsAll(selectedBuilding)) {
             throw new WonderException(ErrorCode.BUILDING_NOT_MATCH);
         }
 
@@ -54,7 +55,7 @@ public class DeliveryController {
     public ResponseEntity<Slice<DeliveryResponseDto>> getAllDeliveryPosts(@CurrentUser Member member,
                                                                           @RequestParam(value = "reqType", required = false) String reqType,
                                                                           @RequestParam(value = "school", required = false) String school,
-                                                                          @RequestParam(value = "building", required = false) String building,
+                                                                          @RequestParam(value = "building", defaultValue = "") List<Building> building,
                                                                           @RequestParam(value = "size", defaultValue = "") List<String> sizeList,
                                                                           @PageableDefault(sort = "joinedAt", direction = DESC) Pageable pageable) {
         return ResponseEntity.ok(deliveryService.getAllDeliveryPosts(member, reqType, school, building, sizeList, pageable));

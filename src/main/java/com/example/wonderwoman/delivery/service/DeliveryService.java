@@ -42,7 +42,7 @@ public class DeliveryService {
     public Slice<DeliveryResponseDto> getAllDeliveryPosts(Member member,
                                                           String reqType,
                                                           String school,
-                                                          String building,
+                                                          List<Building> building,
                                                           List<String> sizeList,
                                                           Pageable pageable) {
 
