@@ -58,7 +58,8 @@ public class WebSecurityConfig {
                         "app/auth/validate",
                         "app/auth/reissue",
                         "/app/delivery/post",
-                        "/chatting").permitAll()
+                        "/chatting",
+                        "/ws/chat/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling((exceptionHandling) ->
@@ -68,6 +69,7 @@ public class WebSecurityConfig {
                 );
 
         //http.apply(new JwtSecurityConfig(jwtTokenProvider));
+
         return http.build();
     }
 
