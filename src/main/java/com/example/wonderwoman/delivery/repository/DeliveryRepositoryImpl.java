@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,15 +82,13 @@ public class DeliveryRepositoryImpl {
 
         if (buildingList.isEmpty()) return booleanBuilder;
 
+        List<BooleanExpression> expressions = new ArrayList<>();
+
         for (Building building : buildingList) {
             booleanBuilder.or(deliveryPost.building.contains(building));
         }
 
         return booleanBuilder;
-    }
-
-    private BooleanExpression buildingLike(final String building) {
-        return StringUtils.hasText(building) ? deliveryPost.building.eq(Building.resolve(building)) : null;
     }
 
     private BooleanBuilder sanitarySizeEq(final List<SanitarySize> sizeList) {
