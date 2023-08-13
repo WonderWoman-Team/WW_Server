@@ -17,7 +17,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "delivery_post")
-public class DeliveryPost extends BaseTimeEntity implements Serializable {
+public class DeliveryPost extends BaseTimeEntity {
 
     //게시물 id
     @Id
@@ -80,7 +80,7 @@ public class DeliveryPost extends BaseTimeEntity implements Serializable {
         return this.member.getId().equals(member.getId());
     }
 
-    public void setPostStatus(PostStatus status) {
+    public void updatePostStatus(PostStatus status) {
         this.postStatus = status;
     }
 

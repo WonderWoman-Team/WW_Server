@@ -1,17 +1,14 @@
 package com.example.wonderwoman.chatting.controller;
 
-import com.example.wonderwoman.chatting.entity.ChatRoom;
 import com.example.wonderwoman.chatting.entity.ListResult;
 import com.example.wonderwoman.chatting.repository.ChatRoomRepository;
 import com.example.wonderwoman.chatting.request.ChatRoomRequest;
 import com.example.wonderwoman.chatting.request.ChatRoomStatusRequest;
-import com.example.wonderwoman.chatting.response.ChatMessageResponse;
+import com.example.wonderwoman.chatting.response.ChatMessageDto;
 import com.example.wonderwoman.chatting.response.ChatRoomInfoResponse;
 import com.example.wonderwoman.chatting.service.ChatService;
 import com.example.wonderwoman.chatting.service.ResponseService;
 import com.example.wonderwoman.common.dto.NormalResponseDto;
-import com.example.wonderwoman.exception.ErrorCode;
-import com.example.wonderwoman.exception.WonderException;
 import com.example.wonderwoman.login.CurrentUser;
 import com.example.wonderwoman.member.entity.Member;
 import com.example.wonderwoman.member.repository.MemberRepository;
@@ -48,7 +45,7 @@ public class ChatRoomController {
 
     //특정 방 메시지 리스트 조회
     @GetMapping("/room/{roomId}")
-    public ListResult<ChatMessageResponse> roomChatMessages(@CurrentUser Member member, @PathVariable String roomId) {
+    public ListResult<ChatMessageDto> roomChatMessages(@CurrentUser Member member, @PathVariable String roomId) {
         return responseService.getListResult(chatService.chatMessageList(member, roomId));
     }
 
@@ -66,10 +63,9 @@ public class ChatRoomController {
     //딜리버리 상태 변경
     @PostMapping("/room/status")
     public ResponseEntity<ChatRoomInfoResponse> updateRoomStatus(@CurrentUser Member member, @RequestBody ChatRoomStatusRequest request) {
-        ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId())
-                .orElseThrow(() -> new WonderException(ErrorCode.CHATROOM_NOT_FOUND));
-        chatService.updatePostStatus(chatRoom, request.getStatus());
-        return ResponseEntity.ok(chatService.findRoomById(member, chatRoom.getId()));
+        chatService.updatePostStatus(request.getChatRoomId(), request.getStatus());
+        
+        return ResponseEntity.ok(chatService.findRoomById(member, request.getChatRoomId()));
     }
 
     //채팅방 퇴장(삭제)

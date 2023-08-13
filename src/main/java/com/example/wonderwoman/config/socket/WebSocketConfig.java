@@ -20,16 +20,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         //해당 주소(prefix) 구독 클라이언트에게 메시지 보냄 -> 1:1
         registry.enableSimpleBroker("/sub");
         //도착 경로에 대한 prefix -> /sub에 구독을 신청했을 때 실제 경로가 /chat/app/sub임
-        registry.setApplicationDestinationPrefixes("/app/");
+        registry.setApplicationDestinationPrefixes("/pub");
     }
 
     //클라이언트에서 연결할 websocket endpoint를 지정
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //웹소켓이 handshake를 하기 위해 연결하는 endpoint
-        registry.addEndpoint("/chatting")
-                .setAllowedOriginPatterns("*")  //추후 변경
-                .withSockJS(); //만약 Websocket 지원하지 않는 브라우저라면 polling 방식 수행하도록 함 -> 대신 /webSocket 붙여줘야 함
+        registry.addEndpoint("/ws/chat")
+                .setAllowedOriginPatterns("*");  //추후 변경
+//                .withSockJS(); //만약 Websocket 지원하지 않는 브라우저라면 polling 방식 수행하도록 함 -> 대신 /webSocket 붙여줘야 함
     }
 
     @Override
