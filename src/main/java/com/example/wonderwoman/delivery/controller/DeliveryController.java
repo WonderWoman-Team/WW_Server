@@ -41,9 +41,18 @@ public class DeliveryController {
         List<Building> buildings = deliveryService.getBuildingsBySchool(member.getSchool());
 
         // 사용자가 선택한 건물이 올바른지 확인
-
         if (!buildings.containsAll(selectedBuilding)) {
             throw new WonderException(ErrorCode.BUILDING_NOT_MATCH);
+        }
+
+        if (requestDto.getPostReqType() == null) {
+            throw new WonderException(ErrorCode.VALUE_IS_NONNULL);
+        } else if (requestDto.getSanitaryNum() == null) {
+            throw new WonderException(ErrorCode.VALUE_IS_NONNULL);
+        } else if (requestDto.getSanitarySize() == null) {
+            throw new WonderException(ErrorCode.VALUE_IS_NONNULL);
+        } else if (requestDto.getSanitaryType() == null) {
+            throw new WonderException(ErrorCode.VALUE_IS_NONNULL);
         }
 
         deliveryService.postDelivery(member, requestDto);

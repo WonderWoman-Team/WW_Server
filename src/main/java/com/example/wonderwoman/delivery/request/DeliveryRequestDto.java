@@ -26,7 +26,7 @@ public class DeliveryRequestDto {
     
     private ReqType postReqType;
 
-    private int sanitaryNum;
+    private Integer sanitaryNum;
 
     private SanitarySize sanitarySize;
 
