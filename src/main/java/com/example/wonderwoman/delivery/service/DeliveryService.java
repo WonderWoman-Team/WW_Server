@@ -64,11 +64,4 @@ public class DeliveryService {
 
 
 
-    // 게시글 상태 조회
-    public PostStatus findPostStatus(Member member, String postId) {
-        DeliveryPost deliveryPost = deliveryPostRepository.findByIdAndMember(Long.valueOf(postId), member)
-                .orElseThrow(() -> new RuntimeException("해당하는 게시글을 찾을 수 없습니다."));
-        return deliveryPost.getStatus();
-    }
-
 }
