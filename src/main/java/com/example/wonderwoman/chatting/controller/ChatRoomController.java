@@ -6,6 +6,7 @@ import com.example.wonderwoman.chatting.request.ChatRoomRequest;
 import com.example.wonderwoman.chatting.request.ChatRoomStatusRequest;
 import com.example.wonderwoman.chatting.response.ChatMessageDto;
 import com.example.wonderwoman.chatting.response.ChatRoomInfoResponse;
+import com.example.wonderwoman.chatting.response.ChatRoomListDto;
 import com.example.wonderwoman.chatting.service.ChatService;
 import com.example.wonderwoman.chatting.service.ResponseService;
 import com.example.wonderwoman.common.dto.NormalResponseDto;
@@ -33,7 +34,7 @@ public class ChatRoomController {
 
     //사용자별 전체 방 조회(요청, 출동 상관 없음) -> 완챝
     @GetMapping("/rooms")
-    public ListResult<ChatRoomInfoResponse> rooms(@CurrentUser Member member) {
+    public ListResult<ChatRoomListDto> rooms(@CurrentUser Member member) {
         return responseService.getListResult(chatService.findAllRoom(member));
     }
 
@@ -64,7 +65,7 @@ public class ChatRoomController {
     @PostMapping("/room/status")
     public ResponseEntity<ChatRoomInfoResponse> updateRoomStatus(@CurrentUser Member member, @RequestBody ChatRoomStatusRequest request) {
         chatService.updatePostStatus(request.getChatRoomId(), request.getStatus());
-        
+
         return ResponseEntity.ok(chatService.findRoomById(member, request.getChatRoomId()));
     }
 

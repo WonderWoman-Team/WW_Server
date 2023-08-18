@@ -33,7 +33,7 @@ public class DeliveryResponseDto {
     private boolean isWritten;
 
     public static DeliveryResponseDto of(DeliveryPost deliveryPost, boolean isWritten) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm");
         String createdAtString = deliveryPost.getJoinedAt().format(formatter);
 
         return DeliveryResponseDto.builder()

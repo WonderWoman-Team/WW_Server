@@ -6,6 +6,7 @@ import com.example.wonderwoman.chatting.repository.ChatMessageRepository;
 import com.example.wonderwoman.chatting.repository.ChatRoomRepository;
 import com.example.wonderwoman.chatting.response.ChatMessageDto;
 import com.example.wonderwoman.chatting.response.ChatRoomInfoResponse;
+import com.example.wonderwoman.chatting.response.ChatRoomListDto;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.entity.PostStatus;
 import com.example.wonderwoman.delivery.entity.ReqType;
@@ -57,19 +58,19 @@ public class ChatService {
     }
 
     //채팅방 리스트 조회
-    public List<ChatRoomInfoResponse> findAllRoom(Member member) {
+    public List<ChatRoomListDto> findAllRoom(Member member) {
         return chatRoomRepository.findChatRoomsByMember(member.getId())
                 .stream()
                 .sorted(Comparator.comparing(ChatRoom::getUpdatedAt))
                 .map(o -> {
                     if (o.getCaller().getId() == member.getId()) {
                         if (o.getDeliveryPost().isWrittenPost(member))
-                            return ChatRoomInfoResponse.of(o, o.getHelper(), true);
-                        return ChatRoomInfoResponse.of(o, o.getHelper(), false);
+                            return ChatRoomListDto.of(o, o.getHelper(), true);
+                        return ChatRoomListDto.of(o, o.getHelper(), false);
                     } else {
                         if (o.getDeliveryPost().isWrittenPost(member))
-                            return ChatRoomInfoResponse.of(o, o.getCaller(), true);
-                        return ChatRoomInfoResponse.of(o, o.getCaller(), false);
+                            return ChatRoomListDto.of(o, o.getCaller(), true);
+                        return ChatRoomListDto.of(o, o.getCaller(), false);
                     }
                 })
                 .collect(Collectors.toList());
