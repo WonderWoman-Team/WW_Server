@@ -196,9 +196,7 @@ public class ChatService {
                     .collect(Collectors.toList());
 
             log.info(dtos.size() + "만큼 있습니다.");
-            Collections.sort(dtos, (o1, o2) -> {
-                return o2.getSendTime().compareTo(o1.getSendTime());
-            });
+            Collections.sort(dtos, Comparator.comparing(ChatMessageDto::getSendTime));
 
             return dtos;
         } else {
