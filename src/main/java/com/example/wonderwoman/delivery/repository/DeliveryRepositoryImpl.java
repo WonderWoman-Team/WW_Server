@@ -14,6 +14,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -33,45 +34,50 @@ import static com.example.wonderwoman.delivery.entity.QDeliveryPost.deliveryPost
 public class DeliveryRepositoryImpl {
     private final JPAQueryFactory queryFactory;
 
-        public Slice<DeliveryResponseDto> getSliceOfDelivery(Member member,
-                                                             final String reqType,
-                                                             final String school,
-                                                             final List<Building> building,
-                                                             final List<SanitarySize> sanitarySize,
-                                                             Pageable pageable) {
-            JPAQuery<DeliveryPost> results = queryFactory.selectFrom(deliveryPost)
-                    .where(
-                            reqTypeLike(reqType),
-                            schoolLike(school),
-                            buildingLike(building),
-                            sanitarySizeEq(sanitarySize)
-                    )
-                    .offset(pageable.getOffset()) // 기존 offset 설정 유지
-                    .limit(pageable.getPageSize() + 1);
+    public Slice<DeliveryResponseDto> getSliceOfDelivery(Member member,
+                                                         final String reqType,
+                                                         final String school,
+                                                         final List<Building> building,
+                                                         final List<SanitarySize> sanitarySize,
+                                                         final Long lastId,
+                                                         Pageable pageable) {
+        JPAQuery<DeliveryPost> results = queryFactory.selectFrom(deliveryPost)
+                .where(
+                        reqTypeLike(reqType),
+                        schoolLike(school),
+                        buildingLike(building),
+                        sanitarySizeEq(sanitarySize),
+                        ltDeliveryPostId(lastId)
+                )
+                .offset(pageable.getOffset()) // 기존 offset 설정 유지
+                .limit(pageable.getPageSize() + 1);
 
-            // 정렬 정보가 있을 경우 정렬 적용
-            if (pageable.getSort().isSorted()) {
-                PathBuilder pathBuilder = new PathBuilder(deliveryPost.getType(), deliveryPost.getMetadata());
-                for (Sort.Order order : pageable.getSort()) {
-                    results.orderBy(new OrderSpecifier<>(order.isAscending() ? Order.ASC : Order.DESC, pathBuilder.get(order.getProperty())));
-                }
+        // 정렬 정보가 있을 경우 정렬 적용
+        if (pageable.getSort().isSorted()) {
+            PathBuilder pathBuilder = new PathBuilder(deliveryPost.getType(), deliveryPost.getMetadata());
+            for (Sort.Order order : pageable.getSort()) {
+                results.orderBy(new OrderSpecifier<>(order.isAscending() ? Order.ASC : Order.DESC, pathBuilder.get(order.getProperty())));
             }
-
-            List<DeliveryResponseDto> contents = results.fetch()
-                    .stream()
-                    .map(o -> DeliveryResponseDto.of(o, o.isWrittenPost(member)))
-                    .collect(Collectors.toList());
-
-            boolean hasNext = false;
-
-            if (contents.size() > pageable.getPageSize()) {
-                contents.remove(pageable.getPageSize());
-                hasNext = true;
-            }
-
-            return new SliceImpl<>(contents, pageable, hasNext);
         }
 
+        List<DeliveryResponseDto> contents = results.fetch()
+                .stream()
+                .map(o -> DeliveryResponseDto.of(o, o.isWrittenPost(member)))
+                .collect(Collectors.toList());
+
+        boolean hasNext = false;
+
+        if (contents.size() > pageable.getPageSize()) {
+            contents.remove(pageable.getPageSize());
+            hasNext = true;
+        }
+
+        return new SliceImpl<>(contents, pageable, hasNext);
+    }
+
+    public BooleanExpression ltDeliveryPostId(@Nullable Long lastId) {
+        return lastId == null ? null : deliveryPost.id.lt(lastId);
+    }
 
     public BooleanExpression reqTypeLike(final String reqType) {
         return StringUtils.hasText(reqType) ? deliveryPost.postReqType.eq(ReqType.resolve(reqType)) : null;
