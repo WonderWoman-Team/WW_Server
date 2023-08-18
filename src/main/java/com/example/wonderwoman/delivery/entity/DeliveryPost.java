@@ -72,6 +72,10 @@ public class DeliveryPost extends BaseTimeEntity {
         this.postComment = postComment;
         this.member = member;
 
+
+    }
+    public PostStatus getStatus() {
+        return postStatus;
     }
 
     public boolean isWrittenPost(Member member) {

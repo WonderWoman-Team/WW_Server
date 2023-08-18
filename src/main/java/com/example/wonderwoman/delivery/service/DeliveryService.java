@@ -2,6 +2,7 @@ package com.example.wonderwoman.delivery.service;
 
 import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.delivery.entity.DeliveryPost;
+import com.example.wonderwoman.delivery.entity.PostStatus;
 import com.example.wonderwoman.delivery.entity.SanitarySize;
 import com.example.wonderwoman.delivery.repository.DeliveryPostRepository;
 import com.example.wonderwoman.delivery.repository.DeliveryRepositoryImpl;
