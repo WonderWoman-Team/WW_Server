@@ -1,7 +1,7 @@
 package com.example.wonderwoman.delivery.controller;
 
-import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.common.dto.NormalResponseDto;
+import com.example.wonderwoman.delivery.entity.Building;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
 import com.example.wonderwoman.delivery.response.DeliveryResponseDto;
 import com.example.wonderwoman.delivery.service.DeliveryService;
@@ -64,10 +64,11 @@ public class DeliveryController {
     public ResponseEntity<Slice<DeliveryResponseDto>> getAllDeliveryPosts(@CurrentUser Member member,
                                                                           @RequestParam(value = "reqType", required = false) String reqType,
                                                                           @RequestParam(value = "school", required = false) String school,
-                                                                          @RequestParam(value = "building", defaultValue = "") List<Building> building,
+                                                                          @RequestParam(value = "building", defaultValue = "") List<String> building,
                                                                           @RequestParam(value = "size", defaultValue = "") List<String> sizeList,
+                                                                          @RequestParam(value = "lastId", required = false) Long lastId,
                                                                           @PageableDefault(sort = "joinedAt", direction = DESC) Pageable pageable) {
-        return ResponseEntity.ok(deliveryService.getAllDeliveryPosts(member, reqType, school, building, sizeList, pageable));
+        return ResponseEntity.ok(deliveryService.getAllDeliveryPosts(member, reqType, school, building, sizeList, lastId, pageable));
     }
 
 }

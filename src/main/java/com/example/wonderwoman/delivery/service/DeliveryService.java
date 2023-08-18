@@ -42,8 +42,9 @@ public class DeliveryService {
     public Slice<DeliveryResponseDto> getAllDeliveryPosts(Member member,
                                                           String reqType,
                                                           String school,
-                                                          List<Building> building,
+                                                          List<String> building,
                                                           List<String> sizeList,
+                                                          Long lastId,
                                                           Pageable pageable) {
 
         List<SanitarySize> sanitarySizes = new ArrayList<>();
@@ -51,7 +52,14 @@ public class DeliveryService {
         for (String size : sizeList) {
             sanitarySizes.add(SanitarySize.resolve(size));
         }
-        return deliveryRepositoryImpl.getSliceOfDelivery(member, reqType, school, building, sanitarySizes, pageable);
+
+        List<Building> buildings = new ArrayList<>();
+
+        for (String b : building) {
+            buildings.add(Building.resolve(b));
+        }
+
+        return deliveryRepositoryImpl.getSliceOfDelivery(member, reqType, school, buildings, sanitarySizes, lastId, pageable);
     }
 
 
