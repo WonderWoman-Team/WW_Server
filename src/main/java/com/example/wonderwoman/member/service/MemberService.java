@@ -30,15 +30,19 @@ public class MemberService {
 
     @Transactional
     public void changeMemberInfo(Member member, ChangeMemberInfoRequest request) {
-        if (authService.findMemberByNickname(request.getNickname()))
+        if (authService.findMemberByNickname(request.getNickname())) {
             throw new WonderException(ErrorCode.DUPLICATE_NICKNAME);
+        } else if (request.getNickname() != null) {
+            member.updateNickname(request.getNickname());
+        }
 
-        member.updateNickname(request.getNickname());
-
-        if (request.getPassword() != null)
+        if (request.getPassword() != null) {
             member.updatePassword(passwordEncoder.encode(request.getPassword()));
+        }
 
-        member.updateImage(request.getImgUrl());
+        if (request.getImgUrl() != null) {
+            member.updateImage(request.getImgUrl());
+        }
         memberRepository.save(member);
     }
 
