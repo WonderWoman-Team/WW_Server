@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ChatRoomStatusRequest {
     private String chatRoomId;
-    private String postId;
     private PostStatus status;
 }
