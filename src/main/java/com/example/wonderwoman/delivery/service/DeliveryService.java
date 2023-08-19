@@ -8,6 +8,8 @@ import com.example.wonderwoman.delivery.repository.DeliveryPostRepository;
 import com.example.wonderwoman.delivery.repository.DeliveryRepositoryImpl;
 import com.example.wonderwoman.delivery.request.DeliveryRequestDto;
 import com.example.wonderwoman.delivery.response.DeliveryResponseDto;
+import com.example.wonderwoman.exception.ErrorCode;
+import com.example.wonderwoman.exception.WonderException;
 import com.example.wonderwoman.member.entity.Member;
 import com.example.wonderwoman.member.entity.School;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +69,25 @@ public class DeliveryService {
     public PostStatus findPostStatus(Member member, String postId) {
         DeliveryPost deliveryPost = deliveryPostRepository.findByIdAndMember(Long.valueOf(postId), member)
                 .orElseThrow(() -> new RuntimeException("해당하는 게시글을 찾을 수 없습니다."));
-        return deliveryPost.getStatus();
+        return deliveryPost.getPostStatus();
     }
+
+    @Transactional
+    public void updatePostStatusWithCancellationByPostId(Member member, Long postId) {
+        DeliveryPost deliveryPost = deliveryPostRepository.findById(postId)
+                .orElseThrow(() -> new WonderException(ErrorCode.ARTICLE_NOT_FOUND));
+
+        if (!deliveryPost.isWrittenPost(member))
+            throw new WonderException(ErrorCode.FORBIDDEN_ARTICLE);
+
+        // 이미 '없음' 상태인 경우에는 게시글 상태를 postStatus로 변경
+        if (deliveryPost.getPostStatus().equals(PostStatus.NONE)) {
+            deliveryPost.updatePostStatus(PostStatus.CANCEL);
+            deliveryPostRepository.save(deliveryPost);
+        } else {
+            throw new WonderException(ErrorCode.INVALID_POST_STATUS_CHANGE);
+        }
+    }
+
 
 }
