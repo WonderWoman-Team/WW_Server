@@ -4,8 +4,6 @@ import com.example.wonderwoman.delivery.entity.DeliveryPost;
 import com.example.wonderwoman.delivery.entity.ReqType;
 import com.example.wonderwoman.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +17,6 @@ public interface DeliveryPostRepository extends JpaRepository<DeliveryPost, Long
     List<DeliveryPost> findByPostReqType(ReqType postReqType);
 
     Optional<DeliveryPost> findByIdAndMember(Long id, Member member);
-    @Query("select c from DeliveryPost c where c.id=:id")
-    Optional<DeliveryPost> findById(@Param("id") String id);
+
+    Optional<DeliveryPost> findById(Long id);
 }

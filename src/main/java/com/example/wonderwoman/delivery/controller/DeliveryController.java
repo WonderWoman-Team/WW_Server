@@ -71,4 +71,9 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.getAllDeliveryPosts(member, reqType, school, building, sizeList, lastId, pageable));
     }
 
+    @PostMapping("/{postId}")
+    public ResponseEntity<NormalResponseDto> postDelivery(@CurrentUser Member member, @PathVariable Long postId) {
+        deliveryService.updatePostStatusWithCancellationByPostId(member, postId);
+        return ResponseEntity.ok(NormalResponseDto.success());
+    }
 }

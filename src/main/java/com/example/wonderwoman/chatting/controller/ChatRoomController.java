@@ -10,7 +10,6 @@ import com.example.wonderwoman.chatting.response.ChatRoomListDto;
 import com.example.wonderwoman.chatting.service.ChatService;
 import com.example.wonderwoman.chatting.service.ResponseService;
 import com.example.wonderwoman.common.dto.NormalResponseDto;
-import com.example.wonderwoman.delivery.entity.PostStatus;
 import com.example.wonderwoman.delivery.service.DeliveryService;
 import com.example.wonderwoman.login.CurrentUser;
 import com.example.wonderwoman.member.entity.Member;
@@ -67,17 +66,7 @@ public class ChatRoomController {
     //딜리버리 상태 변경
     @PostMapping("/room/status")
     public ResponseEntity<ChatRoomInfoResponse> updateRoomStatus(@CurrentUser Member member, @RequestBody ChatRoomStatusRequest request) {
-//        chatService.updatePostStatus(request.getChatRoomId(), request.getStatus());
-        PostStatus postStatus = deliveryService.findPostStatus(member, request.getPostId());
-        System.out.println(postStatus);
-        if (PostStatus.NONE.equals(postStatus)) {
-            System.out.println("채팅방 존재하지 않을 때");
-            chatService.updatePostStatusWithCancellationByPostId(request.getPostId(), request.getStatus());
-        } else {
-            System.out.println("채팅방 존재할 때");
-            chatService.updatePostStatus(request.getChatRoomId(), request.getStatus());
-            return ResponseEntity.ok(chatService.findRoomById(member, request.getChatRoomId()));
-        }
+        chatService.updatePostStatus(member, request.getChatRoomId(), request.getStatus());
         return ResponseEntity.ok(chatService.findRoomById(member, request.getChatRoomId()));
     }
 

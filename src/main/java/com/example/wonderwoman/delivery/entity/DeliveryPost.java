@@ -74,9 +74,6 @@ public class DeliveryPost extends BaseTimeEntity {
 
 
     }
-    public PostStatus getStatus() {
-        return postStatus;
-    }
 
     public boolean isWrittenPost(Member member) {
         return this.member.getId().equals(member.getId());

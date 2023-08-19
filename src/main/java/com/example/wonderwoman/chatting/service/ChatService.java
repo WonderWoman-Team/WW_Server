@@ -163,29 +163,17 @@ public class ChatService {
 
     //딜리버리 상태 변경
     @Transactional
-    public void updatePostStatus(String chatRoomId, PostStatus postStatus) {
+    public void updatePostStatus(Member member, String chatRoomId, PostStatus postStatus) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new WonderException(ErrorCode.CHATROOM_NOT_FOUND));
+
+        if (!chatRoom.getDeliveryPost().isWrittenPost(member))
+            throw new WonderException(ErrorCode.FORBIDDEN_CHATROOM);
+
         DeliveryPost deliveryPost = chatRoom.getDeliveryPost();
         deliveryPost.updatePostStatus(postStatus);
         deliveryPostRepository.save(deliveryPost);
     }
-
-    @Transactional
-    public void updatePostStatusWithCancellationByPostId(String postId, PostStatus postStatus) {
-        DeliveryPost deliveryPost = deliveryPostRepository.findById(postId)
-                .orElseThrow(() -> new WonderException(ErrorCode.ARTICLE_NOT_FOUND));
-
-        // 이미 '없음' 상태인 경우에는 게시글 상태를 postStatus로 변경
-        if (deliveryPost.getPostStatus() == PostStatus.NONE) {
-            deliveryPost.updatePostStatus(postStatus);
-            deliveryPostRepository.save(deliveryPost);
-        } else {
-            throw new WonderException(ErrorCode.INVALID_POST_STATUS_CHANGE);
-        }
-    }
-
-
 
     //채팅방 삭제(퇴장)
     @Transactional

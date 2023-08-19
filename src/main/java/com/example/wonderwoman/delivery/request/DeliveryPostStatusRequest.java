@@ -1,6 +1,5 @@
-package com.example.wonderwoman.chatting.request;
+package com.example.wonderwoman.delivery.request;
 
-import com.example.wonderwoman.delivery.entity.PostStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChatRoomStatusRequest {
+public class DeliveryPostStatusRequest {
     private String chatRoomId;
-    private PostStatus status;
 }
