@@ -6,10 +6,13 @@ name: Java CI with Gradle & Deploy to EC2
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "master" ]
+    branches: 
+      - master
   pull_request:
-    types: closed
-    branches: [ "master" ]
+    types: 
+      - closed
+    branches: 
+      - master
     
 env:
   AWS_REGION: ap-northeast-2
