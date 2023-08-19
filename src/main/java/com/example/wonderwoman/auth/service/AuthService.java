@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,9 +44,10 @@ public class AuthService {
     }
 
     //임시 비밀번호로 변경(사용자가 x, 시스템에서)
-    public void changeTempPw(String email, String newPassword) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("가입되지 않은 이메일입니다"));
+    @Transactional
+    public void changeTempPw(Member member, String newPassword) {
         member.updatePassword(passwordEncoder.encode(newPassword)); // 변경된 비밀번호를 인코딩하여 저장
+        memberRepository.save(member);
     }
 
     //로그인
@@ -186,10 +186,6 @@ public class AuthService {
 
     public boolean findMemberByNickname(String nickname) {
         return memberRepository.existsByNickname(nickname);
-    }
-
-    public Optional<Member> findByEmail(String email) {
-        return memberRepository.findByEmail(email);
     }
 
 }

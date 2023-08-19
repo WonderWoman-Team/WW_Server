@@ -9,6 +9,8 @@ import com.example.wonderwoman.login.request.LoginRequestDto;
 import com.example.wonderwoman.mail.request.EmailRequestDto;
 import com.example.wonderwoman.mail.service.ChangePwEmailService;
 import com.example.wonderwoman.mail.service.SignupEmailService;
+import com.example.wonderwoman.member.entity.Member;
+import com.example.wonderwoman.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.server.Cookie;
@@ -26,6 +28,8 @@ public class AuthController {
     private final AuthService authService;
 
     private final SignupEmailService signupEmailService;
+
+    private final MemberService memberService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -63,7 +67,8 @@ public class AuthController {
         if (!isAlreadyExistEmail(requestDto.getEmail()))
             return ResponseEntity.ok(NormalResponseDto.fail());
         String newPassword = changePwEmailService.sendSimpleMessage(requestDto.getEmail());
-        authService.changeTempPw(requestDto.getEmail(), newPassword);
+        Member member = memberService.findByEmail(requestDto.getEmail());
+        authService.changeTempPw(member, newPassword);
         return ResponseEntity.ok(NormalResponseDto.success());
     }
 
