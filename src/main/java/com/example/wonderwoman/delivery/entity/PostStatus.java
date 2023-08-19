@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public enum PostStatus {
     NONE("없음"),
+    CANCEL("취소"),
     CHATTING("채팅중"),
     IN_PROGRESS("진행중"),
     DONE("완료");
