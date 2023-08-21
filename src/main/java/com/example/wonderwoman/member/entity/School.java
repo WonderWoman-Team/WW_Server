@@ -47,7 +47,7 @@ public enum School {
                     Building.EducationB,
                     Building.AsanEngineering,
                     Building.NewEngineering,
-                    Building.Library
+                    Building.Library_EWHA
             )),
     SOOKMYUNG("숙명여자대학교",
             Arrays.asList(
